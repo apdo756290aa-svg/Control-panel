@@ -40,6 +40,12 @@
         <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-brand-500 flex items-center justify-center transition">
           <i class="fa-solid fa-bars text-base"></i>
         </button>
+
+        <!-- زر الرجوع الذكي (يظهر عند الانتقال للأقسام الفرعية) -->
+        <button id="backBtn" onclick="goBackTab()" class="hidden w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition" title="رجوع">
+          <i class="fa-solid fa-arrow-right text-sm"></i>
+        </button>
+
         <div class="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center font-black text-white shadow-lg">
           <i class="fa-solid fa-gauge-high"></i>
         </div>
@@ -64,7 +70,7 @@
     </div>
   </header>
 
-  <!-- Sidebar Drawer (القائمة الجانبية الوحيدة لأقسام لوحة التحكم) -->
+  <!-- Sidebar Drawer (القائمة الجانبية) -->
   <div id="sidebarOverlay" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden transition-opacity" onclick="toggleSidebar()"></div>
   <aside id="sidebarDrawer" class="fixed top-0 right-0 bottom-0 w-72 bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 p-5 flex flex-col justify-between">
     <div class="space-y-6">
@@ -99,7 +105,7 @@
           <i class="fa-solid fa-gears w-5 text-brand-500"></i> إعدادات المطعم العامة
         </button>
         <button onclick="switchTab('extras'); toggleSidebar();" id="tab-btn-extras" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-qrcode w-5 text-brand-500"></i> كود QR والبراند
+          <i class="fa-solid fa-qrcode w-5 text-brand-500"></i> كود QR للزبائن
         </button>
       </div>
     </div>
@@ -115,7 +121,7 @@
     <!-- 1. الرئيسية والتقارير -->
     <section id="tab-dashboard" class="admin-section space-y-5">
       
-      <!-- الأزرار البرتقالية الكبيرة (تم نقلها فوق الكروت الأربعة مباشرة) -->
+      <!-- الأزرار البرتقالية الكبيرة -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-lg">
           <div class="flex items-center gap-2">
@@ -140,7 +146,7 @@
         </button>
       </div>
 
-      <!-- الكروت الأربعة (متقسمة صفين: 2 جنب بعض في كل صف، وبألوان أفتح وأرقام بارزة) -->
+      <!-- الكروت الأربعة -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
           <div class="flex justify-between items-center text-slate-400 text-xs font-bold">
@@ -179,7 +185,7 @@
         </div>
       </div>
 
-      <!-- قسم الأكثر طلبا ومبيعا (سطر واحد لكل صنف بالاسم والسعر والرقم فقط) -->
+      <!-- قائمة الأكثر طلباً -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
         <h3 class="font-bold text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-3">
           <i class="fa-solid fa-fire text-brand-500"></i>
@@ -221,7 +227,6 @@
         </button>
       </div>
 
-      <!-- كروت الأصناف (الصورة تملأ العرض، السعر Badge برتقالي، وأيقونات تعديل وحذف صغيرة) -->
       <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Dynamic Products -->
       </div>
@@ -301,19 +306,19 @@
       </div>
     </section>
 
-    <!-- 7. الكيو آر والإضافات -->
+    <!-- 7. الكيو آر للزبائن -->
     <section id="tab-extras" class="admin-section hidden space-y-4">
       <h3 class="font-bold text-base flex items-center gap-2 text-white">
         <i class="fa-solid fa-qrcode text-brand-500"></i>
-        <span>توليد كود QR للموقع</span>
+        <span>كود QR الخاص بالزبائن (للمنيو)</span>
       </h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
-        <p class="text-xs text-slate-400">امسح الكود أو اطبعة ليعرض منيو المطعم مباشرة لزبائنك</p>
+        <p class="text-xs text-slate-400">هذا الكود موجه خصيصاً للزبائن لفتح منيو المطعم وتصفحه (آمن تماماً للطباعة على الترابيزات)</p>
         <div id="qrcodeContainer" class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
           <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain">
         </div>
         <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition">
-          <i class="fa-solid fa-print ml-1"></i> طباعة كود QR
+          <i class="fa-solid fa-print ml-1"></i> طباعة كود QR للزبائن
         </button>
       </div>
     </section>
@@ -349,7 +354,7 @@
             </select>
           </div>
         </div>
-        <div>
+           <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">رابط الصورة (URL)</label>
           <input id="modalItemImg" type="text" placeholder="https://..." class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
         </div>
@@ -379,6 +384,8 @@
     ];
 
     let adminProducts = JSON.parse(localStorage.getItem('admin_menu_items') || 'null') || defaultMenu;
+    let currentTab = 'dashboard';
+    let lastTab = 'dashboard';
 
     window.addEventListener('DOMContentLoaded', async () => {
       if (window.supabase) {
@@ -400,8 +407,21 @@
     }
 
     function switchTab(tabId) {
+      if (tabId !== currentTab) {
+        lastTab = currentTab;
+        currentTab = tabId;
+      }
+
       document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
       document.getElementById('tab-' + tabId)?.classList.remove('hidden');
+
+      // إظهار أو إخفاء زر الرجوع في الهيدر العلوي
+      const backBtn = document.getElementById('backBtn');
+      if (tabId === 'dashboard') {
+        backBtn.classList.add('hidden');
+      } else {
+        backBtn.classList.remove('hidden');
+      }
 
       document.querySelectorAll('.sidebar-btn').forEach(btn => {
         btn.classList.remove('bg-brand-500', 'text-white', 'shadow');
@@ -412,6 +432,12 @@
         activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
         activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow');
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBackTab() {
+      // يرجعك للصفحة الرئيسية أو للتبويب السابق فوراً
+      switchTab('dashboard');
     }
 
     async function loadProductsFromSupabase() {
@@ -484,13 +510,11 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
           <div class="relative h-40 bg-slate-800">
             <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-full object-cover">
-            <!-- سعر بـ Badge برتقالي فوق الصورة -->
             <span class="absolute top-3 right-3 text-xs bg-brand-500 text-white font-black px-3 py-1 rounded-full shadow-md">${p.price}</span>
             <span class="absolute bottom-3 right-3 text-[10px] bg-slate-950/80 text-white px-2.5 py-1 rounded-full">${p.category}</span>
           </div>
           <div class="p-4 space-y-3 flex-grow flex flex-col justify-between">
             <h4 class="font-bold text-sm text-white">${p.name}</h4>
-            <!-- أزرار تعديل وحذف بأيقونات صغيرة فقط -->
             <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
               <button onclick="openEditProductModal(${idx})" title="تعديل" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 flex items-center justify-center transition">
                 <i class="fa-solid fa-pen text-xs"></i>
@@ -598,7 +622,6 @@
         const deletedItem = adminProducts[idx];
         adminProducts.splice(idx, 1);
         
-        // حفظ التحديث فورا في التخزين المحلي عشان ميرجعش مع الـ Refresh
         localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
 
         if (supabaseClient && deletedItem) {
@@ -634,8 +657,9 @@
     }
 
     function setupQR() {
-      const currentUrl = window.location.href.replace('admin.html', 'index.html');
-      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentUrl)}`;
+      // تم ربط الـ QR حصرياً بموقع الزبائن (index.html) وليس لوحة التحكم
+      const customerMenuUrl = "https://apdo756290aa-svg.github.io/Egyptian-restaurant-/?v=1";
+      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(customerMenuUrl)}`;
     }
 
     function addCategoryPrompt() {
