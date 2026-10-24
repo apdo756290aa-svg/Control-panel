@@ -64,7 +64,7 @@
     </div>
   </header>
 
-  <!-- Sidebar Drawer (القائمة الجانبية) -->
+  <!-- Sidebar Drawer (القائمة الجانبية الوحيدة لأقسام لوحة التحكم) -->
   <div id="sidebarOverlay" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden transition-opacity" onclick="toggleSidebar()"></div>
   <aside id="sidebarDrawer" class="fixed top-0 right-0 bottom-0 w-72 bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 p-5 flex flex-col justify-between">
     <div class="space-y-6">
@@ -110,19 +110,44 @@
   </aside>
 
   <!-- Main Content Container -->
-  <main class="max-w-7xl mx-auto px-4 pt-6">
+  <main class="max-w-7xl mx-auto px-4 pt-6 space-y-6">
 
     <!-- 1. الرئيسية والتقارير -->
-    <section id="tab-dashboard" class="admin-section space-y-6">
+    <section id="tab-dashboard" class="admin-section space-y-5">
       
-      <!-- كروت الأرقام بلون أفتح وخاصية Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- الأزرار البرتقالية الكبيرة (تم نقلها فوق الكروت الأربعة مباشرة) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-lg">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-base"></i>
+            <span>إعادة فتح المنيو / إضافة وجبة</span>
+          </div>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+        </button>
+        <button onclick="switchTab('orders')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-receipt text-brand-500 text-base"></i>
+            <span>مراجعة الطلبات الواردة</span>
+          </div>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+        </button>
+        <button onclick="switchTab('settings')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-truck-fast text-brand-500 text-base"></i>
+            <span>إعدادات التوصيل والسيستم</span>
+          </div>
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+        </button>
+      </div>
+
+      <!-- الكروت الأربعة (متقسمة صفين: 2 جنب بعض في كل صف، وبألوان أفتح وأرقام بارزة) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
           <div class="flex justify-between items-center text-slate-400 text-xs font-bold">
             <span>مبيعات اليوم الكلية</span>
             <i class="fa-solid fa-wallet text-emerald-400 text-base"></i>
           </div>
-          <h3 class="text-3xl font-black text-white"><span id="statTodaySales">580</span> <span class="text-sm font-normal text-slate-400">جنية</span></h3>
+          <h3 class="text-3xl font-black text-white"><span id="statTodaySales">580</span> <span class="text-sm font-normal text-slate-400">جنيه</span></h3>
           <p class="text-[10px] text-emerald-400 font-bold">+12% عن أمس</p>
         </div>
 
@@ -154,32 +179,7 @@
         </div>
       </div>
 
-      <!-- الإجراءات السريعة (تم نقلها للأعلى مباشرة بعد كروت الأرقام) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-lg">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-base"></i>
-            <span>إعادة فتح المنيو / إضافة وجبة</span>
-          </div>
-          <i class="fa-solid fa-chevron-left text-[10px]"></i>
-        </button>
-        <button onclick="switchTab('orders')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-receipt text-brand-500 text-base"></i>
-            <span>مراجعة الطلبات الواردة</span>
-          </div>
-          <i class="fa-solid fa-chevron-left text-[10px]"></i>
-        </button>
-        <button onclick="switchTab('settings')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-truck-fast text-brand-500 text-base"></i>
-            <span>إعدادات التوصيل والسيستم</span>
-          </div>
-          <i class="fa-solid fa-chevron-left text-[10px]"></i>
-        </button>
-      </div>
-
-      <!-- قسم الأكثر طلبا ومبيعا (تم تصغيره كـ List بسيطة بسطر واحد) -->
+      <!-- قسم الأكثر طلبا ومبيعا (سطر واحد لكل صنف بالاسم والسعر والرقم فقط) -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
         <h3 class="font-bold text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-3">
           <i class="fa-solid fa-fire text-brand-500"></i>
@@ -221,7 +221,7 @@
         </button>
       </div>
 
-      <!-- كروت الأصناف بتصميم جديد (الصورة بعرض الكارت، السعر Badge برتقالي، وأيقونات تعديل وحذف صغيرة) -->
+      <!-- كروت الأصناف (الصورة تملأ العرض، السعر Badge برتقالي، وأيقونات تعديل وحذف صغيرة) -->
       <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <!-- Dynamic Products -->
       </div>
@@ -369,7 +369,7 @@
     const SUPABASE_ANON_KEY = "sb_publishable_GOohTFjLF2Cjm70fLTrayA_vUlhd06f";
     let supabaseClient = null;
 
-    let adminProducts = [
+    let defaultMenu = [
       { name: "طاجن لحم بالبطاطس", category: "طواجن ورئيسي", price: 120, img: "https://picsum.photos/seed/meat1/300/200", available: true },
       { name: "طاجن مكرونة بالبشاميل", category: "طواجن ورئيسي", price: 90, img: "https://picsum.photos/seed/pasta2/300/200", available: true },
       { name: "طاجن تورلي باللحمة", category: "طواجن ورئيسي", price: 110, img: "https://picsum.photos/seed/stew3/300/200", available: true },
@@ -377,6 +377,8 @@
       { name: "حواشي مصري بلدي", category: "طواجن ورئيسي", price: 65, img: "https://picsum.photos/seed/hawawshi5/300/200", available: true },
       { name: "كشري مصري ملك الخدمات", category: "طواجن ورئيسي", price: 55, img: "https://picsum.photos/seed/koshary6/300/200", available: true }
     ];
+
+    let adminProducts = JSON.parse(localStorage.getItem('admin_menu_items') || 'null') || defaultMenu;
 
     window.addEventListener('DOMContentLoaded', async () => {
       if (window.supabase) {
@@ -418,6 +420,7 @@
         const { data } = await supabaseClient.from('menu').select('*');
         if (data && data.length > 0) {
           adminProducts = data;
+          localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
           renderAdminProducts();
           renderDashboardStats();
         }
@@ -482,7 +485,7 @@
           <div class="relative h-40 bg-slate-800">
             <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-full object-cover">
             <!-- سعر بـ Badge برتقالي فوق الصورة -->
-            <span class="absolute top-3 right-3 text-xs bg-brand-500 text-white font-black px-3 py-1 rounded-full shadow-md">${p.price} جنيه</span>
+            <span class="absolute top-3 right-3 text-xs bg-brand-500 text-white font-black px-3 py-1 rounded-full shadow-md">${p.price}</span>
             <span class="absolute bottom-3 right-3 text-[10px] bg-slate-950/80 text-white px-2.5 py-1 rounded-full">${p.category}</span>
           </div>
           <div class="p-4 space-y-3 flex-grow flex flex-col justify-between">
@@ -512,7 +515,7 @@
               <span class="w-6 h-6 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-xs">#${idx+1}</span>
               <span class="font-bold text-xs text-white">${p.name}</span>
             </div>
-            <span class="text-xs font-black text-emerald-400">${p.price} جـ</span>
+            <span class="text-xs font-black text-emerald-400">${p.price}</span>
           </div>
         `).join('');
       }
@@ -577,6 +580,8 @@
         adminProducts[idx] = { ...adminProducts[idx], name, price, category, img };
       }
 
+      localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
+
       if (supabaseClient) {
         try {
           await supabaseClient.from('menu').upsert(adminProducts);
@@ -589,11 +594,16 @@
     }
 
     async function deleteProductAdmin(idx) {
-      if (confirm('هل أنت متأكد من حذف هذا الصنف؟')) {
+      if (confirm('هل أنت متأكد من حذف هذا الصنف نهائياً؟')) {
+        const deletedItem = adminProducts[idx];
         adminProducts.splice(idx, 1);
-        if (supabaseClient) {
+        
+        // حفظ التحديث فورا في التخزين المحلي عشان ميرجعش مع الـ Refresh
+        localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
+
+        if (supabaseClient && deletedItem) {
           try {
-            await supabaseClient.from('menu').delete().eq('name', adminProducts[idx]?.name);
+            await supabaseClient.from('menu').delete().eq('name', deletedItem.name);
           } catch (e) {}
         }
         renderAdminProducts();
