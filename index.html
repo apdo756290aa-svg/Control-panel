@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>لوحة التحكم الاحترافية - المطعم المصري</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,46 +25,46 @@
     }
   </script>
   <style>
-    body { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen pb-20">
+<body class="bg-slate-950 text-slate-100 min-h-screen pb-20 overflow-x-hidden">
 
   <!-- Top Header Bar -->
-  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 px-4 py-3 shadow-md">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center gap-3">
+  <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 px-3 sm:px-4 py-3 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center gap-2">
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <!-- زر القائمة الجانبية -->
-        <button onclick="toggleSidebar()" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-brand-500 flex items-center justify-center transition">
-          <i class="fa-solid fa-bars text-base"></i>
+        <button onclick="toggleSidebar()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-brand-500 flex-shrink-0 flex items-center justify-center transition">
+          <i class="fa-solid fa-bars text-sm sm:text-base"></i>
         </button>
 
-        <!-- زر الرجوع الذكي (يظهر عند الانتقال للأقسام الفرعية) -->
-        <button id="backBtn" onclick="goBackTab()" class="hidden w-10 h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition" title="رجوع">
-          <i class="fa-solid fa-arrow-right text-sm"></i>
+        <!-- زر الرجوع الذكي -->
+        <button id="backBtn" onclick="goBackTab()" class="hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex-shrink-0 flex items-center justify-center transition" title="رجوع">
+          <i class="fa-solid fa-arrow-right text-xs sm:text-sm"></i>
         </button>
 
-        <div class="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center font-black text-white shadow-lg">
-          <i class="fa-solid fa-gauge-high"></i>
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-500 flex-shrink-0 flex items-center justify-center font-black text-white shadow-lg">
+          <i class="fa-solid fa-gauge-high text-sm sm:text-base"></i>
         </div>
-        <div>
-          <h1 class="font-extrabold text-base text-white">إدارة المطعم المصري</h1>
-          <p class="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
+        <div class="min-w-0">
+          <h1 class="font-extrabold text-xs sm:text-base text-white truncate">إدارة المطعم المصري</h1>
+          <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            لوحة التحكم الاحترافية
+            <span class="truncate">لوحة التحكم</span>
           </p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 text-slate-300">
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 px-2.5 sm:px-3 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-300">
           <i class="fa-solid fa-globe text-brand-500"></i>
-          <span>عرض الموقع</span>
+          <span class="hidden xs:inline">عرض</span>
         </a>
-        <button onclick="toggleStoreStatus()" id="storeStatusBtn" class="bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-sm text-white">
-          المطعم مفتوح 🟢
+        <button onclick="toggleStoreStatus()" id="storeStatusBtn" class="bg-emerald-600 hover:bg-emerald-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white">
+          مفتوح 🟢
         </button>
       </div>
     </div>
@@ -72,10 +72,10 @@
 
   <!-- Sidebar Drawer (القائمة الجانبية) -->
   <div id="sidebarOverlay" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden transition-opacity" onclick="toggleSidebar()"></div>
-  <aside id="sidebarDrawer" class="fixed top-0 right-0 bottom-0 w-72 bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 p-5 flex flex-col justify-between">
-    <div class="space-y-6">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-        <h3 class="font-extrabold text-sm text-white flex items-center gap-2">
+  <aside id="sidebarDrawer" class="fixed top-0 right-0 bottom-0 w-64 sm:w-72 bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 p-4 sm:p-5 flex flex-col justify-between overflow-y-auto">
+    <div class="space-y-5">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-extrabold text-xs sm:text-sm text-white flex items-center gap-2">
           <i class="fa-solid fa-compass text-brand-500"></i>
           <span>أقسام لوحة التحكم</span>
         </h3>
@@ -84,110 +84,112 @@
         </button>
       </div>
 
-      <div class="space-y-2">
-        <button onclick="switchTab('dashboard'); toggleSidebar();" id="tab-btn-dashboard" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-brand-500 text-white shadow">
-          <i class="fa-solid fa-chart-pie w-5"></i> الرئيسية والتقارير
+      <div class="space-y-1.5">
+        <button onclick="switchTab('dashboard'); toggleSidebar();" id="tab-btn-dashboard" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-brand-500 text-white shadow">
+          <i class="fa-solid fa-chart-pie w-4"></i> الرئيسية والتقارير
         </button>
-        <button onclick="switchTab('orders'); toggleSidebar();" id="tab-btn-orders" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-receipt w-5 text-brand-500"></i> إدارة الطلبات 
+        <button onclick="switchTab('orders'); toggleSidebar();" id="tab-btn-orders" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-receipt w-4 text-brand-500"></i> إدارة الطلبات 
           <span id="ordersBadge" class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[10px] mr-auto">0</span>
         </button>
-        <button onclick="switchTab('products'); toggleSidebar();" id="tab-btn-products" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-utensils w-5 text-brand-500"></i> إدارة المنتجات والوجبات
+        <button onclick="switchTab('products'); toggleSidebar();" id="tab-btn-products" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-utensils w-4 text-brand-500"></i> إدارة الأصناف والوجبات
         </button>
-        <button onclick="switchTab('categories'); toggleSidebar();" id="tab-btn-categories" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-list w-5 text-brand-500"></i> إدارة الأقسام
+        <button onclick="switchTab('categories'); toggleSidebar();" id="tab-btn-categories" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-list w-4 text-brand-500"></i> إدارة الأقسام
         </button>
-        <button onclick="switchTab('customers'); toggleSidebar();" id="tab-btn-customers" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-users w-5 text-brand-500"></i> سجل العملاء
+        <button onclick="switchTab('customers'); toggleSidebar();" id="tab-btn-customers" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-users w-4 text-brand-500"></i> سجل العملاء
         </button>
-        <button onclick="switchTab('settings'); toggleSidebar();" id="tab-btn-settings" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-gears w-5 text-brand-500"></i> إعدادات المطعم العامة
+        <button onclick="switchTab('settings'); toggleSidebar();" id="tab-btn-settings" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-gears w-4 text-brand-500"></i> إعدادات المطعم العامة
         </button>
-        <button onclick="switchTab('extras'); toggleSidebar();" id="tab-btn-extras" class="sidebar-btn w-full text-right px-4 py-3 rounded-xl text-xs font-bold transition flex items-center gap-3 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-qrcode w-5 text-brand-500"></i> كود QR للزبائن
+        <button onclick="switchTab('extras'); toggleSidebar();" id="tab-btn-extras" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-qrcode w-4 text-brand-500"></i> كود QR للزبائن
         </button>
       </div>
     </div>
 
-    <div class="border-t border-slate-800 pt-4 text-center text-[10px] text-slate-500">
+    <div class="border-t border-slate-800 pt-3 mt-4 text-center text-[10px] text-slate-500">
       المطعم المصري © 2026
     </div>
   </aside>
 
   <!-- Main Content Container -->
-  <main class="max-w-7xl mx-auto px-4 pt-6 space-y-6">
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6 space-y-4 sm:space-y-6">
 
     <!-- 1. الرئيسية والتقارير -->
-    <section id="tab-dashboard" class="admin-section space-y-5">
+    <section id="tab-dashboard" class="admin-section space-y-4 sm:space-y-5">
       
-      <!-- الأزرار البرتقالية الكبيرة -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-lg">
+      <!-- الأزرار البرتقالية (متجاوبة للموبايل والكمبيوتر) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-md">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-base"></i>
-            <span>إعادة فتح المنيو / إضافة وجبة</span>
+            <i class="fa-solid fa-plus-circle text-sm"></i>
+            <span>فتح المنيو / إضافة وجبة</span>
           </div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
-        <button onclick="switchTab('orders')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-sm">
+
+        <button onclick="switchTab('orders')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-receipt text-brand-500 text-base"></i>
+            <i class="fa-solid fa-receipt text-brand-500 text-sm"></i>
             <span>مراجعة الطلبات الواردة</span>
           </div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
-        <button onclick="switchTab('settings')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs transition flex items-center justify-between shadow-sm">
+
+        <button onclick="switchTab('settings')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-sm">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-truck-fast text-brand-500 text-base"></i>
-            <span>إعدادات التوصيل والسيستم</span>
+            <i class="fa-solid fa-truck-fast text-brand-500 text-sm"></i>
+            <span>إعدادات التوصيل</span>
           </div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
       </div>
 
-      <!-- الكروت الأربعة -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div class="flex justify-between items-center text-slate-400 text-xs font-bold">
-            <span>مبيعات اليوم الكلية</span>
-            <i class="fa-solid fa-wallet text-emerald-400 text-base"></i>
+      <!-- الكروت الأربعة (مرنة على الموبايل 2 جنب بعض) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
+            <span class="truncate">المبيعات</span>
+            <i class="fa-solid fa-wallet text-emerald-400 text-sm"></i>
           </div>
-          <h3 class="text-3xl font-black text-white"><span id="statTodaySales">580</span> <span class="text-sm font-normal text-slate-400">جنيه</span></h3>
-          <p class="text-[10px] text-emerald-400 font-bold">+12% عن أمس</p>
+          <h3 class="text-xl sm:text-3xl font-black text-white"><span id="statTodaySales">580</span> <span class="text-[10px] sm:text-sm font-normal text-slate-400">ج</span></h3>
+          <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate">+12% عن أمس</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div class="flex justify-between items-center text-slate-400 text-xs font-bold">
-            <span>عدد طلبات اليوم</span>
-            <i class="fa-solid fa-bag-shopping text-brand-500 text-base"></i>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
+            <span class="truncate">الطلبات</span>
+            <i class="fa-solid fa-bag-shopping text-brand-500 text-sm"></i>
           </div>
-          <h3 class="text-3xl font-black text-white" id="statTodayOrders">5 <span class="text-sm font-normal text-slate-400">طلبات</span></h3>
-          <p class="text-[10px] text-slate-400">كاش عند الاستلام</p>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTodayOrders">5 <span class="text-[10px] sm:text-sm font-normal text-slate-400">طلب</span></h3>
+          <p class="text-[9px] sm:text-[10px] text-slate-400 truncate">كاش عند الاستلام</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div class="flex justify-between items-center text-slate-400 text-xs font-bold">
-            <span>إجمالي الأصناف المتاحة</span>
-            <i class="fa-solid fa-utensils text-sky-400 text-base"></i>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
+            <span class="truncate">الأصناف</span>
+            <i class="fa-solid fa-utensils text-sky-400 text-sm"></i>
           </div>
-          <h3 class="text-3xl font-black text-white" id="statTotalItems">6 <span class="text-sm font-normal text-slate-400">أصناف</span></h3>
-          <p class="text-[10px] text-sky-400 font-bold">نشط في المنيو</p>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalItems">6 <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span></h3>
+          <p class="text-[9px] sm:text-[10px] text-sky-400 font-bold truncate">نشط في المنيو</p>
         </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div class="flex justify-between items-center text-slate-400 text-xs font-bold">
-            <span>العملاء المسجلين</span>
-            <i class="fa-solid fa-user-group text-amber-400 text-base"></i>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
+            <span class="truncate">العملاء</span>
+            <i class="fa-solid fa-user-group text-amber-400 text-sm"></i>
           </div>
-          <h3 class="text-3xl font-black text-white" id="statTotalCustomers">12 <span class="text-sm font-normal text-slate-400">عميل</span></h3>
-          <p class="text-[10px] text-amber-400 font-bold">تفاعل دائم</p>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalCustomers">12 <span class="text-[10px] sm:text-sm font-normal text-slate-400">عميل</span></h3>
+          <p class="text-[9px] sm:text-[10px] text-amber-400 font-bold truncate">تفاعل دائم</p>
         </div>
       </div>
 
-      <!-- قائمة الأكثر طلباً -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
-        <h3 class="font-bold text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-3">
+      <!-- الأكثر طلباً -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
+        <h3 class="font-bold text-xs sm:text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-2.5">
           <i class="fa-solid fa-fire text-brand-500"></i>
           <span>الأصناف الأكثر طلباً ومبيعاً</span>
         </h3>
@@ -198,13 +200,13 @@
     </section>
 
     <!-- 2. إدارة الطلبات -->
-    <section id="tab-orders" class="admin-section hidden space-y-4">
+    <section id="tab-orders" class="admin-section hidden space-y-3 sm:space-y-4">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-base flex items-center gap-2 text-white">
+        <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
           <i class="fa-solid fa-receipt text-brand-500"></i>
-          <span>سجل الطلبات الواردة (كاش)</span>
+          <span>سجل الطلبات الواردة</span>
         </h3>
-        <button onclick="loadOrdersAdmin()" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-2 rounded-xl text-xs font-bold transition">
+        <button onclick="loadOrdersAdmin()" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition">
           <i class="fa-solid fa-rotate-right ml-1"></i> تحديث
         </button>
       </div>
@@ -215,41 +217,41 @@
     </section>
 
     <!-- 3. إدارة المنتجات -->
-    <section id="tab-products" class="admin-section hidden space-y-4">
+    <section id="tab-products" class="admin-section hidden space-y-3 sm:space-y-4">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-base flex items-center gap-2 text-white">
+        <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
           <i class="fa-solid fa-utensils text-brand-500"></i>
           <span>إدارة الأصناف والوجبات</span>
         </h3>
-        <button onclick="openAddProductModal()" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-lg">
+        <button onclick="openAddProductModal()" class="bg-brand-500 hover:bg-brand-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-lg">
           <i class="fa-solid fa-plus"></i>
           <span>صنف جديد</span>
         </button>
       </div>
 
-      <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <!-- Dynamic Products -->
       </div>
     </section>
 
     <!-- 4. إدارة الأقسام -->
-    <section id="tab-categories" class="admin-section hidden space-y-4">
+    <section id="tab-categories" class="admin-section hidden space-y-3 sm:space-y-4">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-base flex items-center gap-2 text-white">
+        <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
           <i class="fa-solid fa-list text-brand-500"></i>
-          <span>إدارة الأقسام والتصنيفات</span>
+          <span>إدارة الأقسام</span>
         </h3>
-        <button onclick="addCategoryPrompt()" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-lg">
+        <button onclick="addCategoryPrompt()" class="bg-brand-500 hover:bg-brand-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg">
           <i class="fa-solid fa-plus ml-1"></i> إضافة قسم
         </button>
       </div>
 
-      <div id="adminCategoriesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+      <div id="adminCategoriesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl flex justify-between items-center">
           <span class="font-bold text-xs text-white">طواجن ورئيسي</span>
           <span class="text-[10px] bg-brand-500/20 text-brand-500 px-2.5 py-1 rounded-full font-bold">نشط</span>
         </div>
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center">
+        <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl flex justify-between items-center">
           <span class="font-bold text-xs text-white">مشويات</span>
           <span class="text-[10px] bg-brand-500/20 text-brand-500 px-2.5 py-1 rounded-full font-bold">نشط</span>
         </div>
@@ -257,8 +259,8 @@
     </section>
 
     <!-- 5. إدارة العملاء -->
-    <section id="tab-customers" class="admin-section hidden space-y-4">
-      <h3 class="font-bold text-base flex items-center gap-2 text-white">
+    <section id="tab-customers" class="admin-section hidden space-y-3 sm:space-y-4">
+      <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
         <i class="fa-solid fa-users text-brand-500"></i>
         <span>سجل العملاء والمشترين</span>
       </h3>
@@ -267,10 +269,10 @@
           <table class="w-full text-right text-xs">
             <thead class="bg-slate-800/80 text-slate-400 border-b border-slate-800">
               <tr>
-                <th class="p-3.5">اسم العميل</th>
-                <th class="p-3.5">رقم الواتساب</th>
-                <th class="p-3.5">العنوان المسجل</th>
-                <th class="p-3.5">عدد الطلبات</th>
+                <th class="p-3">الاسم</th>
+                <th class="p-3">الهاتف</th>
+                <th class="p-3">العنوان</th>
+                <th class="p-3">الطلبات</th>
               </tr>
             </thead>
             <tbody id="customersTableBody" class="divide-y divide-slate-800/60">
@@ -282,92 +284,74 @@
     </section>
 
     <!-- 6. إعدادات المطعم العامة -->
-    <section id="tab-settings" class="admin-section hidden space-y-4">
-      <h3 class="font-bold text-base flex items-center gap-2 text-white">
+    <section id="tab-settings" class="admin-section hidden space-y-3 sm:space-y-4">
+      <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
         <i class="fa-solid fa-gears text-brand-500"></i>
-        <span>إعدادات المطعم والسيستم العامة</span>
+        <span>إعدادات المطعم والسيستم</span>
       </h3>
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-3.5 shadow-sm">
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">اسم المطعم في الموقع</label>
-          <input id="settingStoreName" type="text" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" value="المطعم المصري">
+          <input id="settingStoreName" type="text" class="w-full p-2.5 sm:p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" value="المطعم المصري">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">رقم الواتساب لاستقبال الطلبات (بدون +)</label>
-          <input id="settingPhone" type="text" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" value="201148041323">
+          <label class="block text-xs font-bold text-slate-300 mb-1">رقم الواتساب لاستقبال الطلبات</label>
+          <input id="settingPhone" type="text" class="w-full p-2.5 sm:p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" value="201148041323">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">رسالة التنبيه العلوية (Banner Alert)</label>
-          <input id="settingBanner" type="text" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" placeholder="مثال: التوصيل مجاناً اليوم!">
+          <label class="block text-xs font-bold text-slate-300 mb-1">رسالة التنبيه العلوية</label>
+          <input id="settingBanner" type="text" class="w-full p-2.5 sm:p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" placeholder="مثال: التوصيل مجاناً اليوم!">
         </div>
-        <button onclick="saveGeneralSettings()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl text-xs transition shadow-lg">
-          حفظ التغييرات العامة 🚀
+        <button onclick="saveGeneralSettings()" class="w-full sm:w-auto bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl text-xs transition shadow-lg">
+          حفظ التغييرات 🚀
         </button>
       </div>
     </section>
 
     <!-- 7. الكيو آر للزبائن -->
-    <section id="tab-extras" class="admin-section hidden space-y-4">
-      <h3 class="font-bold text-base flex items-center gap-2 text-white">
+    <section id="tab-extras" class="admin-section hidden space-y-3 sm:space-y-4">
+      <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
         <i class="fa-solid fa-qrcode text-brand-500"></i>
         <span>كود QR الخاص بالزبائن (للمنيو)</span>
       </h3>
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
-        <p class="text-xs text-slate-400">هذا الكود موجه خصيصاً للزبائن لفتح منيو المطعم وتصفحه (آمن تماماً للطباعة على الترابيزات)</p>
-        <div id="qrcodeContainer" class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 text-center space-y-4">
+        <p class="text-xs text-slate-400">امسح الكود أو اطبعة ليعرض منيو المطعم مباشرة لزبائنك</p>
+        <div id="qrcodeContainer" class="bg-white p-3 sm:p-4 rounded-2xl w-40 h-40 sm:w-48 sm:h-48 mx-auto flex items-center justify-center shadow-lg">
           <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain">
         </div>
         <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition">
-          <i class="fa-solid fa-print ml-1"></i> طباعة كود QR للزبائن
+          <i class="fa-solid fa-print ml-1"></i> طباعة كود QR
         </button>
       </div>
     </section>
 
   </main>
 
-  <!-- Product Modal (Add/Edit) -->
-  <div id="productModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 space-y-4 shadow-2xl">
-      <h3 id="productModalTitle" class="font-extrabold text-base text-white">إضافة وجبة أو صنف جديد</h3>
+  <!-- Modal -->
+  <div id="productModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl sm:rounded-3xl p-5 space-y-3.5 shadow-2xl">
+      <h3 id="productModalTitle" class="font-extrabold text-sm sm:text-base text-white">إضافة وجبة أو صنف جديد</h3>
       <input type="hidden" id="editProductIndex" value="-1">
       
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">اسم الصنف</label>
-          <input id="modalItemName" type="text" placeholder="مثال: طاجن لحم بالبطاطس" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="modalItemName" type="text" placeholder="مثال: طاجن لحم" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
         </div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">السعر (جنيه)</label>
-            <input id="modalItemPrice" type="number" placeholder="120" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">القسم</label>
-            <select id="modalItemCategory" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
-              <option value="طواجن ورئيسي">طواجن ورئيسي</option>
-              <option value="أكلات بحرية">أكلات بحرية</option>
-              <option value="مشويات">مشويات</option>
-              <option value="مقبلات">مقبلات</option>
-              <option value="حلويات">حلويات</option>
-              <option value="مشروبات ساخنة">مشروبات ساخنة</option>
-              <option value="مشروبات ساقعة">مشروبات ساقعة</option>
-            </select>
-          </div>
-        </div>
-           <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">رابط الصورة (URL)</label>
-          <input id="modalItemImg" type="text" placeholder="https://..." class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
+          <input id="modalItemImg" type="text" placeholder="https://..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
         </div>
       </div>
 
       <div class="flex gap-2 pt-2">
-        <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg">حفظ الصنف</button>
-        <button onclick="closeProductModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 px-4 rounded-xl text-xs transition">إلغاء</button>
+        <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-lg">حفظ</button>
+        <button onclick="closeProductModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition">إلغاء</button>
       </div>
     </div>
   </div>
 
-  <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://nktadskksxbvgvxxtyoe.supabase.co";
@@ -415,7 +399,6 @@
       document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
       document.getElementById('tab-' + tabId)?.classList.remove('hidden');
 
-      // إظهار أو إخفاء زر الرجوع في الهيدر العلوي
       const backBtn = document.getElementById('backBtn');
       if (tabId === 'dashboard') {
         backBtn.classList.add('hidden');
@@ -436,7 +419,6 @@
     }
 
     function goBackTab() {
-      // يرجعك للصفحة الرئيسية أو للتبويب السابق فوراً
       switchTab('dashboard');
     }
 
@@ -475,25 +457,25 @@
       }
 
       container.innerHTML = orders.map((ord, idx) => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div class="space-y-1">
-            <div class="flex items-center gap-2">
-              <span class="font-black text-white text-sm">طلب #${ord.id || (idx+1)}</span>
-              <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">كاش عند الاستلام</span>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div class="space-y-1 w-full">
+            <div class="flex items-center justify-between sm:justify-start gap-2">
+              <span class="font-black text-white text-xs sm:text-sm">طلب #${ord.id || (idx+1)}</span>
+              <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full">كاش عند الاستلام</span>
             </div>
-            <p class="text-xs text-slate-300"><b>العميل:</b> ${ord.customer_name || ord.name || 'عميل'} | <b>الهاتف:</b> ${ord.phone}</p>
-            <p class="text-xs text-slate-400"><b>العنوان:</b> ${ord.address}</p>
-            <div class="text-xs text-amber-300 bg-slate-950 p-2 rounded-xl mt-1">
+            <p class="text-[11px] sm:text-xs text-slate-300"><b>العميل:</b> ${ord.customer_name || ord.name || 'عميل'} | <b>الهاتف:</b> ${ord.phone}</p>
+            <p class="text-[11px] sm:text-xs text-slate-400"><b>العنوان:</b> ${ord.address}</p>
+            <div class="text-[11px] sm:text-xs text-amber-300 bg-slate-950 p-2 rounded-xl mt-1">
               ${(ord.items || []).map(i => `• ${i.name} (x${i.qty}) = ${i.price}ج`).join('<br>')}
             </div>
           </div>
-          <div class="flex flex-col items-end gap-2 w-full sm:w-auto">
-            <span class="text-base font-black text-brand-500">${ord.total} جنيه</span>
+          <div class="flex sm:flex-col justify-between items-center sm:items-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+            <span class="text-sm sm:text-base font-black text-brand-500">${ord.total} جنيه</span>
             <div class="flex gap-1.5">
-              <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition">
-                <i class="fa-solid fa-print"></i> فاتورة
+              <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition">
+                <i class="fa-solid fa-print"></i>
               </button>
-              <button onclick="deleteOrderAdmin(${idx})" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+              <button onclick="deleteOrderAdmin(${idx})" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-2.5 py-1.5 rounded-xl text-xs font-bold transition">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
@@ -508,18 +490,18 @@
 
       container.innerHTML = adminProducts.map((p, idx) => `
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
-          <div class="relative h-40 bg-slate-800">
+          <div class="relative h-36 sm:h-40 bg-slate-800">
             <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-full object-cover">
-            <span class="absolute top-3 right-3 text-xs bg-brand-500 text-white font-black px-3 py-1 rounded-full shadow-md">${p.price}</span>
-            <span class="absolute bottom-3 right-3 text-[10px] bg-slate-950/80 text-white px-2.5 py-1 rounded-full">${p.category}</span>
+            <span class="absolute top-2.5 right-2.5 text-xs bg-brand-500 text-white font-black px-2.5 py-0.5 rounded-full shadow-md">${p.price}</span>
+            <span class="absolute bottom-2.5 right-2.5 text-[9px] bg-slate-950/80 text-white px-2 py-0.5 rounded-full">${p.category}</span>
           </div>
-          <div class="p-4 space-y-3 flex-grow flex flex-col justify-between">
-            <h4 class="font-bold text-sm text-white">${p.name}</h4>
+          <div class="p-3.5 space-y-2.5 flex-grow flex flex-col justify-between">
+            <h4 class="font-bold text-xs sm:text-sm text-white">${p.name}</h4>
             <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-              <button onclick="openEditProductModal(${idx})" title="تعديل" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 flex items-center justify-center transition">
+              <button onclick="openEditProductModal(${idx})" title="تعديل" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 flex items-center justify-center transition">
                 <i class="fa-solid fa-pen text-xs"></i>
               </button>
-              <button onclick="deleteProductAdmin(${idx})" title="حذف" class="w-9 h-9 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 flex items-center justify-center transition">
+              <button onclick="deleteProductAdmin(${idx})" title="حذف" class="w-8 h-8 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 flex items-center justify-center transition">
                 <i class="fa-solid fa-trash-can text-xs"></i>
               </button>
             </div>
@@ -529,17 +511,17 @@
     }
 
     function renderDashboardStats() {
-      document.getElementById('statTotalItems').innerHTML = adminProducts.length + ' <span class="text-sm font-normal text-slate-400">أصناف</span>';
+      document.getElementById('statTotalItems').innerHTML = adminProducts.length + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span>';
 
       const topList = document.getElementById('topSellingList');
       if (topList) {
         topList.innerHTML = adminProducts.slice(0, 4).map((p, idx) => `
-          <div class="flex items-center justify-between py-2.5">
-            <div class="flex items-center gap-3">
-              <span class="w-6 h-6 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-xs">#${idx+1}</span>
-              <span class="font-bold text-xs text-white">${p.name}</span>
+          <div class="flex items-center justify-between py-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-5 h-5 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-[10px] flex-shrink-0">#${idx+1}</span>
+              <span class="font-bold text-xs text-white truncate">${p.name}</span>
             </div>
-            <span class="text-xs font-black text-emerald-400">${p.price}</span>
+            <span class="text-xs font-black text-emerald-400 flex-shrink-0 mr-2">${p.price}</span>
           </div>
         `).join('');
       }
@@ -550,15 +532,15 @@
       if (!tbody) return;
       const u = JSON.parse(localStorage.getItem('user_data') || '{}');
       if (!u.name) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">لا يوجد عملاء مسجلين محلياً حالياً.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">لا يوجد عملاء مسجلين محلياً.</td></tr>`;
         return;
       }
       tbody.innerHTML = `
         <tr class="hover:bg-slate-800/40">
-          <td class="p-3.5 font-bold text-white">${u.name}</td>
-          <td class="p-3.5 text-slate-300">${u.phone}</td>
-          <td class="p-3.5 text-slate-400">${u.address}</td>
-          <td class="p-3.5 font-black text-brand-500">3 طلبات</td>
+          <td class="p-3 font-bold text-white">${u.name}</td>
+          <td class="p-3 text-slate-300">${u.phone}</td>
+          <td class="p-3 text-slate-400">${u.address}</td>
+          <td class="p-3 font-black text-brand-500">3 طلبات</td>
         </tr>
       `;
     }
@@ -644,20 +626,19 @@
     function toggleStoreStatus() {
       const btn = document.getElementById('storeStatusBtn');
       if (btn.innerText.includes('مفتوح')) {
-        btn.innerText = 'المطعم مغلق 🔴';
-        btn.className = 'bg-rose-600 hover:bg-rose-700 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-sm text-white';
+        btn.innerText = 'مغلق 🔴';
+        btn.className = 'bg-rose-600 hover:bg-rose-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
       } else {
-        btn.innerText = 'المطعم مفتوح 🟢';
-        btn.className = 'bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-sm text-white';
+        btn.innerText = 'مفتوح 🟢';
+        btn.className = 'bg-emerald-600 hover:bg-emerald-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
       }
     }
 
     function saveGeneralSettings() {
-      alert('تم حفظ إعدادات المطعم بنجاح وتحديث النظام!');
+      alert('تم حفظ إعدادات المطعم بنجاح!');
     }
 
     function setupQR() {
-      // تم ربط الـ QR حصرياً بموقع الزبائن (index.html) وليس لوحة التحكم
       const customerMenuUrl = "https://apdo756290aa-svg.github.io/Egyptian-restaurant-/?v=1";
       document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(customerMenuUrl)}`;
     }
