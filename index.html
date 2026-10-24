@@ -331,11 +331,6 @@
       <div class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">اسم الصنف</label>
-        <input id="modalItemName" type="text" placeholder="مثال: طاجن لحم" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">السعر (جنيه)</label>
             <input id="modalItemPrice" type="number" placeholder="120" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
           </div>
           <div>
@@ -383,7 +378,6 @@
     let currentTab = 'dashboard';
 
     window.addEventListener('DOMContentLoaded', async () => {
-      // التحقق مما إذا كان الأدمن مسجل الدخول مسبقاً في الجلسة الحالية
       if (sessionStorage.getItem('admin_logged_in') === 'true') {
         document.getElementById('adminLoginModal').classList.add('hidden');
       }
@@ -400,16 +394,15 @@
       setupQR();
     });
 
-    // دالة التحقق من رمز السر (PIN Code)
     function verifyAdminPin() {
       const pinInput = document.getElementById('adminPinInput').value.trim();
-      const correctPin = "1234"; // يمكنك تغيير الرمز هنا إلى ما تحب
+      const correctPin = "1234";
 
       if (pinInput === correctPin) {
         sessionStorage.setItem('admin_logged_in', 'true');
         document.getElementById('adminLoginModal').classList.add('hidden');
       } else {
-        alert('رمز الأمان غير صحيح! حاول مرة أخرى (الرمز الافتراضي: 1234)');
+        alert('رمز الأمان غير صحيح! (الرمز الافتراضي: 1234)');
       }
     }
 
@@ -615,13 +608,18 @@
 
       if (supabaseClient) {
         try {
-          await supabaseClient.from('menu').upsert(adminProducts);
-        } catch (e) {}
+          await supabaseClient.from('menu').upsert(
+            adminProducts.map(p => ({ name: p.name, price: p.price, category: p.category, img: p.img, available: p.available }))
+          );
+        } catch (e) {
+          console.log("خطأ في حفظ سوبابيز", e);
+        }
       }
 
       renderAdminProducts();
       renderDashboardStats();
       closeProductModal();
+      alert('تم الحفظ بنجاح وتحديثه للزبائن! 🚀');
     }
 
     async function deleteProductAdmin(idx) {
@@ -633,10 +631,13 @@
         if (supabaseClient && deletedItem) {
           try {
             await supabaseClient.from('menu').delete().eq('name', deletedItem.name);
-          } catch (e) {}
+          } catch (e) {
+            console.log("خطأ في الحذف من سوبابيز", e);
+          }
         }
         renderAdminProducts();
         renderDashboardStats();
+        alert('تم الحذف بنجاح وتحديثه للزبائن! 🗑️');
       }
     }
 
