@@ -167,19 +167,19 @@
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
           <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
-            <span class="truncate">المبيعات</span>
+            <span class="truncate">إجمالي المبيعات</span>
             <i class="fa-solid fa-wallet text-emerald-400 text-sm"></i>
           </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white"><span id="statTodaySales">580</span> <span class="text-[10px] sm:text-sm font-normal text-slate-400">ج</span></h3>
-          <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate">+12% عن أمس</p>
+          <h3 class="text-xl sm:text-3xl font-black text-white"><span id="statTodaySales">0</span> <span class="text-[10px] sm:text-sm font-normal text-slate-400">ج</span></h3>
+          <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate">محدث فوري</p>
         </div>
 
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
           <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
-            <span class="truncate">الطلبات</span>
+            <span class="truncate">عدد الطلبات</span>
             <i class="fa-solid fa-bag-shopping text-brand-500 text-sm"></i>
           </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTodayOrders">5 <span class="text-[10px] sm:text-sm font-normal text-slate-400">طلب</span></h3>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTodayOrders">0 <span class="text-[10px] sm:text-sm font-normal text-slate-400">طلب</span></h3>
           <p class="text-[9px] sm:text-[10px] text-slate-400 truncate">كاش عند الاستلام</p>
         </div>
 
@@ -188,7 +188,7 @@
             <span class="truncate">الأصناف</span>
             <i class="fa-solid fa-utensils text-sky-400 text-sm"></i>
           </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalItems">6 <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span></h3>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalItems">0 <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span></h3>
           <p class="text-[9px] sm:text-[10px] text-sky-400 font-bold truncate">نشط في المنيو</p>
         </div>
 
@@ -197,15 +197,15 @@
             <span class="truncate">العملاء</span>
             <i class="fa-solid fa-user-group text-amber-400 text-sm"></i>
           </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalCustomers">12 <span class="text-[10px] sm:text-sm font-normal text-slate-400">عميل</span></h3>
-          <p class="text-[9px] sm:text-[10px] text-amber-400 font-bold truncate">تفاعل دائم</p>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalCustomers">1 <span class="text-[10px] sm:text-sm font-normal text-slate-400">عميل</span></h3>
+          <p class="text-[9px] sm:text-[10px] text-amber-400 font-bold truncate">مسجل</p>
         </div>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
         <h3 class="font-bold text-xs sm:text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-2.5">
           <i class="fa-solid fa-fire text-brand-500"></i>
-          <span>الأصناف الأكثر طلباً ومبيعاً</span>
+          <span>أصناف المنيو الحالي</span>
         </h3>
         <div id="topSellingList" class="divide-y divide-slate-800/60"></div>
       </div>
@@ -329,8 +329,14 @@
       <input type="hidden" id="editProductIndex" value="-1">
       
       <div class="space-y-3">
+        <!-- تم اصلاح حقل اسم الصنف هنا ليعمل تماماً -->
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">اسم الصنف</label>
+          <input id="modalItemName" type="text" placeholder="مثال: طاجن لحم" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">السعر (جنيه)</label>
             <input id="modalItemPrice" type="number" placeholder="120" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
           </div>
           <div>
@@ -353,7 +359,7 @@
       </div>
 
       <div class="flex gap-2 pt-2">
-        <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-lg">حفظ</button>
+        <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-lg">حفظ ونشر</button>
         <button onclick="closeProductModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition">إلغاء</button>
       </div>
     </div>
@@ -365,17 +371,8 @@
     const SUPABASE_ANON_KEY = "sb_publishable_GOohTFjLF2Cjm70fLTrayA_vUlhd06f";
     let supabaseClient = null;
 
-    let defaultMenu = [
-      { name: "طاجن لحم بالبطاطس", category: "طواجن ورئيسي", price: 120, img: "https://picsum.photos/seed/meat1/300/200", available: true },
-      { name: "طاجن مكرونة بالبشاميل", category: "طواجن ورئيسي", price: 90, img: "https://picsum.photos/seed/pasta2/300/200", available: true },
-      { name: "طاجن تورلي باللحمة", category: "طواجن ورئيسي", price: 110, img: "https://picsum.photos/seed/stew3/300/200", available: true },
-      { name: "طاجن باميه باللحمة الضاني", category: "طواجن ورئيسي", price: 135, img: "https://picsum.photos/seed/okra4/300/200", available: true },
-      { name: "حواشي مصري بلدي", category: "طواجن ورئيسي", price: 65, img: "https://picsum.photos/seed/hawawshi5/300/200", available: true },
-      { name: "كشري مصري ملك الخدمات", category: "طواجن ورئيسي", price: 55, img: "https://picsum.photos/seed/koshary6/300/200", available: true }
-    ];
-
-    let adminProducts = JSON.parse(localStorage.getItem('admin_menu_items') || 'null') || defaultMenu;
-    let currentTab = 'dashboard';
+    let adminProducts = [];
+    let adminOrders = [];
 
     window.addEventListener('DOMContentLoaded', async () => {
       if (sessionStorage.getItem('admin_logged_in') === 'true') {
@@ -386,10 +383,11 @@
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         await loadProductsFromSupabase();
         await loadOrdersAdmin();
+      } else {
+        renderAdminProducts();
+        renderDashboardStats();
       }
       checkInitialStoreStatus();
-      renderAdminProducts();
-      renderDashboardStats();
       renderCustomersTable();
       setupQR();
     });
@@ -414,7 +412,6 @@
     }
 
     function switchTab(tabId) {
-      currentTab = tabId;
       document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
       document.getElementById('tab-' + tabId)?.classList.remove('hidden');
 
@@ -444,38 +441,44 @@
     async function loadProductsFromSupabase() {
       if (!supabaseClient) return;
       try {
-        const { data } = await supabaseClient.from('menu').select('*');
-        if (data && data.length > 0) {
+        const { data, error } = await supabaseClient.from('menu').select('*');
+        if (data) {
           adminProducts = data;
-          localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
           renderAdminProducts();
           renderDashboardStats();
         }
-      } catch (e) {}
+      } catch (e) {
+        console.log("خطأ في جلب المنيو", e);
+      }
     }
 
     async function loadOrdersAdmin() {
-      let orders = [];
-      if (supabaseClient) {
-        try {
-          const { data } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
-          if (data) orders = data;
-        } catch (e) {}
-      }
-      if (orders.length === 0) {
-        orders = JSON.parse(localStorage.getItem('real_orders_history') || '[]');
+      if (!supabaseClient) return;
+      try {
+        const { data } = await supabaseClient.from('orders').select('*');
+        if (data) {
+          adminOrders = data;
+        }
+      } catch (e) {
+        adminOrders = JSON.parse(localStorage.getItem('real_orders_history') || '[]');
       }
 
-      document.getElementById('ordersBadge').innerText = orders.length;
+      document.getElementById('ordersBadge').innerText = adminOrders.length;
+      document.getElementById('statTodayOrders').innerHTML = adminOrders.length + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">طلب</span>';
+      
+      let totalSales = 0;
+      adminOrders.forEach(o => { totalSales += (parseFloat(o.total) || 0); });
+      document.getElementById('statTodaySales').innerHTML = totalSales + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">ج</span>';
+
       const container = document.getElementById('adminOrdersContainer');
       if (!container) return;
 
-      if (orders.length === 0) {
+      if (adminOrders.length === 0) {
         container.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-xs text-slate-400">لا توجد طلبات جديدة واردة حالياً.</div>`;
         return;
       }
 
-      container.innerHTML = orders.map((ord, idx) => `
+      container.innerHTML = adminOrders.map((ord, idx) => `
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div class="space-y-1 w-full">
             <div class="flex items-center justify-between sm:justify-start gap-2">
@@ -491,7 +494,6 @@
           <div class="flex sm:flex-col justify-between items-center sm:items-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
             <span class="text-sm sm:text-base font-black text-brand-500">${ord.total} جنيه</span>
             <div class="flex gap-1.5">
-              <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1.5 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-print"></i></button>
               <button onclick="deleteOrderAdmin(${idx})" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-2.5 py-1.5 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
@@ -503,18 +505,23 @@
       const container = document.getElementById('adminProductsGrid');
       if (!container) return;
 
+      if (adminProducts.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 col-span-full text-center py-6">لا توجد أصناف في المنيو حالياً</p>`;
+        return;
+      }
+
       container.innerHTML = adminProducts.map((p, idx) => `
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
           <div class="relative h-36 sm:h-40 bg-slate-800">
             <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-full object-cover">
             <span class="absolute top-2.5 right-2.5 text-xs bg-brand-500 text-white font-black px-2.5 py-0.5 rounded-full shadow-md">${p.price} جـ</span>
-            <span class="absolute bottom-2.5 right-2.5 text-[9px] bg-slate-950/80 text-white px-2 py-0.5 rounded-full">${p.category}</span>
+            <span class="absolute bottom-2.5 right-2.5 text-[9px] bg-slate-950/80 text-white px-2 py-0.5 rounded-full">${p.category || 'عام'}</span>
           </div>
           <div class="p-3.5 space-y-2.5 flex-grow flex flex-col justify-between">
             <h4 class="font-bold text-xs sm:text-sm text-white">${p.name}</h4>
             <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
               <button onclick="openEditProductModal(${idx})" title="تعديل" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 flex items-center justify-center transition"><i class="fa-solid fa-pen text-xs"></i></button>
-              <button onclick="deleteProductAdmin(${idx})" title="حذف" class="w-8 h-8 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 flex items-center justify-center transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+              <button onclick="deleteProductAdmin('${p.name.replace(/'/g, "\\'")}')" title="حذف" class="w-8 h-8 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 flex items-center justify-center transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
             </div>
           </div>
         </div>
@@ -525,13 +532,17 @@
       document.getElementById('statTotalItems').innerHTML = adminProducts.length + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span>';
       const topList = document.getElementById('topSellingList');
       if (topList) {
-        topList.innerHTML = adminProducts.slice(0, 4).map((p, idx) => `
+        if (adminProducts.length === 0) {
+          topList.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">لا توجد أصناف</p>`;
+          return;
+        }
+        topList.innerHTML = adminProducts.map((p, idx) => `
           <div class="flex items-center justify-between py-2">
             <div class="flex items-center gap-2.5 min-w-0">
               <span class="w-5 h-5 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-[10px] flex-shrink-0">#${idx+1}</span>
               <span class="font-bold text-xs text-white truncate">${p.name}</span>
             </div>
-            <span class="text-xs font-black text-emerald-400 flex-shrink-0 mr-2">${p.price}</span>
+            <span class="text-xs font-black text-brand-500 flex-shrink-0 mr-2">${p.price} ج</span>
           </div>
         `).join('');
       }
@@ -542,10 +553,10 @@
       if (!tbody) return;
       const u = JSON.parse(localStorage.getItem('user_data') || '{}');
       if (!u.name) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">لا يوجد عملاء مسجلين محلياً.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">لا يوجد عملاء مسجلين حالياً.</td></tr>`;
         return;
       }
-      tbody.innerHTML = `<tr class="hover:bg-slate-800/40"><td class="p-3 font-bold text-white">${u.name}</td><td class="p-3 text-slate-300">${u.phone}</td><td class="p-3 text-slate-400">${u.address}</td><td class="p-3 font-black text-brand-500">3 طلبات</td></tr>`;
+      tbody.innerHTML = `<tr class="hover:bg-slate-800/40"><td class="p-3 font-bold text-white">${u.name}</td><td class="p-3 text-slate-300">${u.phone}</td><td class="p-3 text-slate-400">${u.address}</td><td class="p-3 font-black text-brand-500">نشط</td></tr>`;
     }
 
     function openAddProductModal() {
@@ -563,6 +574,7 @@
       document.getElementById('editProductIndex').value = idx;
       document.getElementById('modalItemName').value = p.name;
       document.getElementById('modalItemPrice').value = p.price;
+      document.getElementById('modalItemCategory').value = p.category || 'طواجن ورئيسي';
       document.getElementById('modalItemFile').value = '';
       document.getElementById('productModal').classList.remove('hidden');
     }
@@ -572,79 +584,77 @@
     }
 
     async function saveProductAdmin() {
-      const idx = parseInt(document.getElementById('editProductIndex').value);
       const name = document.getElementById('modalItemName').value.trim();
       const price = parseFloat(document.getElementById('modalItemPrice').value);
       const category = document.getElementById('modalItemCategory').value;
       const fileInput = document.getElementById('modalItemFile');
 
       if (!name || isNaN(price)) {
-        alert('يرجى إدخال اسم الصنف والسعر الصحيح');
+        alert('يرجى إدخال اسم الصنف والسعر بشكل صحيح');
         return;
       }
 
-      let currentImg = idx !== -1 ? adminProducts[idx].img : 'https://picsum.photos/seed/food/300/200';
+      let currentImg = 'https://picsum.photos/seed/food/300/200';
+      const idx = parseInt(document.getElementById('editProductIndex').value);
+      if (idx !== -1 && adminProducts[idx]) {
+        currentImg = adminProducts[idx].img;
+      }
 
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
         reader.onload = async function(e) {
           currentImg = e.target.result;
-          finishSaving(idx, name, price, category, currentImg);
+          await finishSavingToSupabase(name, price, category, currentImg);
         };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        finishSaving(idx, name, price, category, currentImg);
+        await finishSavingToSupabase(name, price, category, currentImg);
       }
     }
 
-    async function finishSaving(idx, name, price, category, img) {
-      if (idx === -1) {
-        adminProducts.push({ name, price, category, img, available: true });
-      } else {
-        adminProducts[idx] = { ...adminProducts[idx], name, price, category, img };
-      }
-
-      localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
-
+    async function finishSavingToSupabase(name, price, category, img) {
       if (supabaseClient) {
         try {
-          await supabaseClient.from('menu').upsert(
-            adminProducts.map(p => ({ name: p.name, price: p.price, category: p.category, img: p.img, available: p.available }))
-          );
+          // استخدام upsert مع الاعتماد على اسم الصنف كمفتاح فريد لمنع التكرار والحذف الوهمي
+          const { error } = await supabaseClient.from('menu').upsert([
+            { name, price, category, img, available: true }
+          ], { onConflict: 'name' });
+
+          if (error) {
+            alert('حدث خطأ أثناء الحفظ في قاعدة البيانات');
+            return;
+          }
         } catch (e) {
-          console.log("خطأ في حفظ سوبابيز", e);
+          console.log("خطأ سوبابيز: ", e);
         }
       }
 
-      renderAdminProducts();
-      renderDashboardStats();
+      await loadProductsFromSupabase();
       closeProductModal();
-      alert('تم الحفظ بنجاح وتحديثه للزبائن! 🚀');
+      alert('تم حفظ الصنف بنجاح وظهر فوراً عند الزبائن! 🚀');
     }
 
-    async function deleteProductAdmin(idx) {
-      if (confirm('هل أنت متأكد من حذف هذا الصنف نهائياً؟')) {
-        const deletedItem = adminProducts[idx];
-        adminProducts.splice(idx, 1);
-        localStorage.setItem('admin_menu_items', JSON.stringify(adminProducts));
-
-        if (supabaseClient && deletedItem) {
+    async function deleteProductAdmin(name) {
+      if (confirm(`هل أنت متأكد من حذف الصنف "${name}" نهائياً؟`)) {
+        if (supabaseClient) {
           try {
-            await supabaseClient.from('menu').delete().eq('name', deletedItem.name);
+            const { error } = await supabaseClient.from('menu').delete().eq('name', name);
+            if (error) {
+              alert('فشل الحذف من سوبابيز');
+              return;
+            }
           } catch (e) {
-            console.log("خطأ في الحذف من سوبابيز", e);
+            console.log("خطأ في الحذف: ", e);
           }
         }
-        renderAdminProducts();
-        renderDashboardStats();
-        alert('تم الحذف بنجاح وتحديثه للزبائن! 🗑️');
+        await loadProductsFromSupabase();
+        alert('تم الحذف بنجاح واختفى من عند الزبائن تماماً! 🗑️');
       }
     }
 
-    function deleteOrderAdmin(idx) {
-      let orders = JSON.parse(localStorage.getItem('real_orders_history') || '[]');
-      orders.splice(idx, 1);
-      localStorage.setItem('real_orders_history', JSON.stringify(orders));
+    async function deleteOrderAdmin(idx) {
+      adminOrders.splice(idx, 1);
+      localStorage.setItem('real_orders_history', JSON.stringify(adminOrders));
       loadOrdersAdmin();
     }
 
