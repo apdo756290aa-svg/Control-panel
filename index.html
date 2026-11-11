@@ -4,21 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>لوحة التحكم الآمنة - المطعم المصري</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts (Cairo) -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            brand: { 50: '#fdf8f6', 100: '#f2e8e5', 500: '#d35400', 600: '#e67e22', 700: '#a04000' }
-          },
+          colors: { brand: { 50: '#fdf8f6', 100: '#f2e8e5', 500: '#d35400', 600: '#e67e22', 700: '#a04000' } },
           fontFamily: { cairo: ['Cairo', 'sans-serif'] }
         }
       }
@@ -31,39 +25,13 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-20 overflow-x-hidden">
 
-  <!-- نافذة تسجيل الدخول الآمنة بـ Supabase Auth -->
-  <div id="adminLoginModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
-      <div class="w-16 h-16 rounded-2xl bg-brand-500/20 text-brand-500 mx-auto flex items-center justify-center text-2xl shadow-inner">
-        <i class="fa-solid fa-lock"></i>
-      </div>
-      <div>
-        <h2 class="text-lg font-black text-white">تسجيل دخول الأدمن</h2>
-        <p class="text-xs text-slate-400 mt-1">أدخل بريدك الإلكتروني وكلمة المرور للمتابعة</p>
-      </div>
-      <div class="space-y-3 pt-2">
-        <input id="adminEmailInput" type="email" placeholder="admin@restaurant.com" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
-        <input id="adminPasswordInput" type="password" placeholder="كلمة المرور" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
-      </div>
-      <button onclick="loginAdminAuth()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-2xl text-xs transition shadow-lg">
-        دخول لوحة التحكم 🔓
-      </button>
-      <p id="loginErrorMsg" class="text-[11px] text-rose-400 hidden"></p>
-    </div>
-  </div>
-
-  <!-- Top Header Bar -->
+  <!-- Header -->
   <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 px-3 sm:px-4 py-3 shadow-md">
     <div class="max-w-7xl mx-auto flex justify-between items-center gap-2">
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
         <button onclick="toggleSidebar()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-brand-500 flex-shrink-0 flex items-center justify-center transition">
           <i class="fa-solid fa-bars text-sm sm:text-base"></i>
         </button>
-
-        <button id="backBtn" onclick="goBackTab()" class="hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex-shrink-0 flex items-center justify-center transition" title="رجوع">
-          <i class="fa-solid fa-arrow-right text-xs sm:text-sm"></i>
-        </button>
-
         <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-500 flex-shrink-0 flex items-center justify-center font-black text-white shadow-lg">
           <i class="fa-solid fa-gauge-high text-sm sm:text-base"></i>
         </div>
@@ -71,7 +39,7 @@
           <h1 class="font-extrabold text-xs sm:text-base text-white truncate" id="headerStoreName">إدارة المطعم المصري</h1>
           <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="truncate" id="adminSessionStatus">متصل بـ RLS ومصادقة الآمنة</span>
+            <span>متصل بقاعدة البيانات السحابية</span>
           </p>
         </div>
       </div>
@@ -83,9 +51,6 @@
         </a>
         <button onclick="toggleStoreStatus()" id="storeStatusBtn" class="bg-emerald-600 hover:bg-emerald-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white">
           مفتوح 🟢
-        </button>
-        <button onclick="logoutAdmin()" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-2.5 py-2 rounded-xl text-[11px] font-bold transition" title="خروج">
-          <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
     </div>
@@ -106,115 +71,85 @@
       </div>
 
       <div class="space-y-1.5">
-        <button onclick="switchTab('dashboard'); toggleSidebar();" id="tab-btn-dashboard" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-brand-500 text-white shadow">
+        <button onclick="switchTab('dashboard'); toggleSidebar();" class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-brand-500 text-white shadow">
           <i class="fa-solid fa-chart-pie w-4"></i> الرئيسية والتقارير
         </button>
-        <button onclick="switchTab('orders'); toggleSidebar();" id="tab-btn-orders" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-receipt w-4 text-brand-500"></i> إدارة الطلبات 
-          <span id="ordersBadge" class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[10px] mr-auto">0</span>
+        <button onclick="switchTab('orders'); toggleSidebar();" class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-receipt w-4 text-brand-500"></i> إدارة الطلبات <span id="ordersBadge" class="bg-rose-500 text-white px-2 py-0.5 rounded-full text-[10px] mr-auto">0</span>
         </button>
-        <button onclick="switchTab('products'); toggleSidebar();" id="tab-btn-products" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+        <button onclick="switchTab('products'); toggleSidebar();" class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
           <i class="fa-solid fa-utensils w-4 text-brand-500"></i> إدارة الأصناف والوجبات
         </button>
-        <button onclick="switchTab('categories'); toggleSidebar();" id="tab-btn-categories" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-list w-4 text-brand-500"></i> إدارة الأقسام
-        </button>
-        <button onclick="switchTab('customers'); toggleSidebar();" id="tab-btn-customers" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+        <button onclick="switchTab('customers'); toggleSidebar();" class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
           <i class="fa-solid fa-users w-4 text-brand-500"></i> سجل العملاء
         </button>
-        <button onclick="switchTab('settings'); toggleSidebar();" id="tab-btn-settings" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-gears w-4 text-brand-500"></i> إعدادات المطعم والأمان
+        <button onclick="switchTab('settings'); toggleSidebar();" class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+          <i class="fa-solid fa-gears w-4 text-brand-500"></i> إعدادات المطعم
         </button>
-        <button onclick="switchTab('extras'); toggleSidebar();" id="tab-btn-extras" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
+        <button onclick="switchTab('extras'); toggleSidebar();" class="w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
           <i class="fa-solid fa-qrcode w-4 text-brand-500"></i> كود QR للزبائن
         </button>
       </div>
     </div>
-    <div class="border-t border-slate-800 pt-3 mt-4 text-center text-[10px] text-slate-500">المطعم المصري © 2026</div>
   </aside>
 
-  <!-- Main Content Container -->
-  <main class="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6 space-y-4 sm:space-y-6">
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 pt-4 sm:pt-6 space-y-4">
 
-    <!-- 1. الرئيسية والتقارير -->
-    <section id="tab-dashboard" class="admin-section space-y-4 sm:space-y-5">
+    <!-- Dashboard -->
+    <section id="tab-dashboard" class="admin-section space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-        <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-md">
+        <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold py-3 px-3.5 rounded-xl text-xs flex items-center justify-between shadow-md">
           <div class="flex items-center gap-2"><i class="fa-solid fa-plus-circle text-sm"></i><span>إضافة وجبة جديدة</span></div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
-        <button onclick="switchTab('orders')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-sm">
+        <button onclick="switchTab('orders')" class="bg-slate-900 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs flex items-center justify-between">
           <div class="flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500 text-sm"></i><span>مراجعة الطلبات الواردة</span></div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
-        <button onclick="switchTab('settings')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-sm">
+        <button onclick="switchTab('settings')" class="bg-slate-900 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs flex items-center justify-between">
           <div class="flex items-center gap-2"><i class="fa-solid fa-gears text-brand-500 text-sm"></i><span>إعدادات المطعم</span></div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm space-y-1">
           <div class="text-slate-400 text-xs font-bold">إجمالي المبيعات</div>
-          <h3 class="text-xl sm:text-3xl font-black text-white"><span id="statTodaySales">0</span> ج</h3>
+          <h3 class="text-2xl font-black text-white"><span id="statTodaySales">0</span> ج</h3>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm space-y-1">
           <div class="text-slate-400 text-xs font-bold">عدد الطلبات</div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTodayOrders">0 طلب</h3>
+          <h3 class="text-2xl font-black text-white" id="statTodayOrders">0 طلب</h3>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-sm space-y-1">
           <div class="text-slate-400 text-xs font-bold">الأصناف النشطة</div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalItems">0 صنف</h3>
+          <h3 class="text-2xl font-black text-white" id="statTotalItems">0 صنف</h3>
         </div>
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
-          <div class="text-slate-400 text-xs font-bold">حالة الحماية</div>
-          <h3 class="text-sm font-black text-emerald-400 pt-2">مفعل (RLS + Auth)</h3>
-        </div>
-      </div>
-
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
-        <h3 class="font-bold text-xs sm:text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-2.5">
-          <i class="fa-solid fa-fire text-brand-500"></i> أصناف المنيو الحالي
-        </h3>
-        <div id="topSellingList" class="divide-y divide-slate-800/60"></div>
       </div>
     </section>
 
-    <!-- 2. الطلبات -->
-    <section id="tab-orders" class="admin-section hidden space-y-3 sm:space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500"></i> سجل الطلبات الواردة</h3>
-        <button onclick="loadOrders()" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold">تحديث</button>
-      </div>
+    <!-- Orders -->
+    <section id="tab-orders" class="admin-section hidden space-y-3">
+      <h3 class="font-bold text-base text-white">سجل الطلبات الواردة</h3>
       <div id="adminOrdersContainer" class="space-y-3"></div>
     </section>
 
-    <!-- 3. المنتجات -->
-    <section id="tab-products" class="admin-section hidden space-y-3 sm:space-y-4">
+    <!-- Products -->
+    <section id="tab-products" class="admin-section hidden space-y-3">
       <div class="flex justify-between items-center">
         <h3 class="font-bold text-base text-white">إدارة أصناف المنيو</h3>
-        <button onclick="openAddProductModal()" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg">+ صنف جديد</button>
+        <button onclick="openAddProductModal()" class="bg-brand-500 text-white px-4 py-2 rounded-xl text-xs font-bold">+ صنف جديد</button>
       </div>
       <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
     </section>
 
-    <!-- 4. الأقسام -->
-    <section id="tab-categories" class="admin-section hidden space-y-3 sm:space-y-4">
-      <h3 class="font-bold text-base text-white">إدارة الأقسام</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl flex justify-between items-center">
-          <span class="font-bold text-xs text-white">طواجن ورئيسي، أكلات بحرية، مشويات، مقبلات، حلويات، مشروبات ساخنة، مشروبات ساقعة</span>
-          <span class="text-[10px] bg-brand-500/20 text-brand-500 px-2.5 py-1 rounded-full font-bold">نشط</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. العملاء -->
-    <section id="tab-customers" class="admin-section hidden space-y-3 sm:space-y-4">
+    <!-- Customers -->
+    <section id="tab-customers" class="admin-section hidden space-y-3">
       <h3 class="font-bold text-base text-white">سجل العملاء</h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
         <table class="w-full text-right text-xs">
-          <thead class="bg-slate-800/80 text-slate-400 border-b border-slate-800">
+          <thead class="bg-slate-800 text-slate-400 border-b border-slate-800">
             <tr><th class="p-3">الاسم</th><th class="p-3">الهاتف</th><th class="p-3">العنوان</th></tr>
           </thead>
           <tbody id="customersTableBody" class="divide-y divide-slate-800/60"></tbody>
@@ -222,9 +157,9 @@
       </div>
     </section>
 
-    <!-- 6. إعدادات المطعم -->
+    <!-- Settings -->
     <section id="tab-settings" class="admin-section hidden space-y-4">
-      <h3 class="font-bold text-base text-white">إعدادات المطعم العامة والأمان</h3>
+      <h3 class="font-bold text-base text-white">إعدادات المطعم</h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-300 mb-1">اسم المطعم</label>
@@ -234,22 +169,18 @@
           <label class="block text-xs font-bold text-slate-300 mb-1">رقم واتساب الإدارة</label>
           <input id="settingWhatsapp" type="text" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none" value="201148041323">
         </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">كلمة المرور الجديدة للأدمن</label>
-          <input id="newAdminPassword" type="password" placeholder="اتركه فارغاً إن لم ترد التغيير" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
-        </div>
-        <button onclick="saveGeneralSettings()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl text-xs transition">حفظ التعديلات والإعدادات 🚀</button>
+        <button onclick="saveGeneralSettings()" class="bg-brand-500 text-white font-bold py-3 px-6 rounded-xl text-xs">حفظ الإعدادات 🚀</button>
       </div>
     </section>
 
-    <!-- 7. QR Code -->
-    <section id="tab-extras" class="admin-section hidden space-y-3 sm:space-y-4">
+    <!-- QR Code -->
+    <section id="tab-extras" class="admin-section hidden space-y-3">
       <h3 class="font-bold text-base text-white">كود QR الخاص بالمنيو</h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
-        <div id="qrcodeContainer" class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
+        <div class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
           <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain">
         </div>
-        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs">طباعة كود QR</button>
+        <button onclick="window.print()" class="bg-slate-800 text-white font-bold py-2.5 px-5 rounded-xl text-xs">طباعة كود QR</button>
       </div>
     </section>
   </main>
@@ -282,8 +213,8 @@
         </div>
       </div>
       <div>
-        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة</label>
-        <input id="modalItemFile" type="file" accept="image/*" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300">
+        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة (رابط)</label>
+        <input id="modalItemImgUrl" type="text" placeholder="https://..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
       </div>
       <div class="flex gap-2 pt-2">
         <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 text-white font-bold py-2.5 rounded-xl text-xs">حفظ ونشر</button>
@@ -304,49 +235,16 @@
     window.addEventListener('DOMContentLoaded', async () => {
       if (window.supabase) {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session) {
-          document.getElementById('adminLoginModal').classList.add('hidden');
-          document.getElementById('adminSessionStatus').innerText = session.user.email;
-          await loadAllData();
-        }
+        await loadAllData();
       }
       setupQR();
     });
-
-    async function loginAdminAuth() {
-      const email = document.getElementById('adminEmailInput').value.trim();
-      const password = document.getElementById('adminPasswordInput').value.trim();
-      const errEl = document.getElementById('loginErrorMsg');
-
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) {
-        errEl.innerText = "خطأ في البريد أو كلمة المرور!";
-        errEl.classList.remove('hidden');
-      } else {
-        document.getElementById('adminLoginModal').classList.add('hidden');
-        document.getElementById('adminSessionStatus').innerText = data.session.user.email;
-        await loadAllData();
-      }
-    }
-
-    async function logoutAdmin() {
-      await supabaseClient.auth.signOut();
-      location.reload();
-    }
 
     async function loadAllData() {
       await loadSettings();
       await loadProducts();
       await loadOrders();
       await loadCustomers();
-    }
-
-    function sanitizeHTML(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-      );
     }
 
     async function loadSettings() {
@@ -367,8 +265,7 @@
     async function toggleStoreStatus() {
       isStoreOpen = !isStoreOpen;
       updateStoreButtonUI();
-      const { error } = await supabaseClient.from('settings').upsert({ id: 1, is_open: isStoreOpen });
-      if (error) alert('فشل تحديث حالة المحل: ' + error.message);
+      await supabaseClient.from('settings').upsert({ id: 1, is_open: isStoreOpen });
     }
 
     function updateStoreButtonUI() {
@@ -383,8 +280,7 @@
     }
 
     async function loadProducts() {
-      const { data, error } = await supabaseClient.from('menu').select('*');
-      if (error) { alert('خطأ في جلب المنيو: ' + error.message); return; }
+      const { data } = await supabaseClient.from('menu').select('*');
       if (data) {
         adminProducts = data;
         renderProducts();
@@ -392,8 +288,7 @@
     }
 
     async function loadOrders() {
-      const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
-      if (error) { alert('خطأ في جلب الطلبات: ' + error.message); return; }
+      const { data } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
       if (data) {
         adminOrders = data;
         renderOrders();
@@ -410,11 +305,11 @@
 
       tbody.innerHTML = uniqueCustomers.map(c => `
         <tr class="hover:bg-slate-800/40">
-          <td class="p-3 font-bold text-white">${sanitizeHTML(c.customer_name)}</td>
-          <td class="p-3 text-slate-300">${sanitizeHTML(c.phone)}</td>
-          <td class="p-3 text-slate-400">${sanitizeHTML(c.address)}</td>
+          <td class="p-3 font-bold text-white">${c.customer_name || 'غير معروف'}</td>
+          <td class="p-3 text-slate-300">${c.phone || '-'}</td>
+          <td class="p-3 text-slate-400">${c.address || '-'}</td>
         </tr>
-      `).join('') || `<tr><td colspan="3" class="p-4 text-center text-slate-500">لا توجد سجلات بعد</td></tr>`;
+      `).join('') || `<tr><td colspan="3" class="p-4 text-center text-slate-500">لا توجد سجلات عملاء بعد</td></tr>`;
     }
 
     function renderProducts() {
@@ -423,27 +318,14 @@
       grid.innerHTML = adminProducts.map((p, idx) => `
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col justify-between">
           <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-32 object-cover rounded-xl mb-2">
-          <h4 class="font-bold text-xs text-white">${sanitizeHTML(p.name)}</h4>
+          <h4 class="font-bold text-xs text-white">${p.name}</h4>
           <span class="text-brand-500 font-black text-sm my-1">${p.price} جنيه</span>
           <div class="flex gap-2 mt-2">
             <button onclick="openEditProductModal(${idx})" class="flex-grow bg-sky-500/20 text-sky-400 py-1.5 rounded-xl text-xs font-bold">تعديل ✏️</button>
-            <button onclick="deleteProduct(${idx})" class="flex-grow bg-rose-500/20 text-rose-400 py-1.5 rounded-xl text-xs font-bold">حذف 🗑️</button>
+            <button onclick="deleteProduct('${p.name.replace(/'/g, "\\'")}')" class="flex-grow bg-rose-500/20 text-rose-400 py-1.5 rounded-xl text-xs font-bold">حذف 🗑️</button>
           </div>
         </div>
       `).join('') || '<p class="text-xs text-slate-500 col-span-full">لا توجد أصناف</p>';
-
-      const topList = document.getElementById('topSellingList');
-      if (topList) {
-        topList.innerHTML = adminProducts.map((p, idx) => `
-          <div class="flex items-center justify-between py-2">
-            <div class="flex items-center gap-2.5">
-              <span class="w-5 h-5 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-[10px]">#${idx+1}</span>
-              <span class="font-bold text-xs text-white">${sanitizeHTML(p.name)}</span>
-            </div>
-            <span class="text-xs font-black text-brand-500">${p.price} ج</span>
-          </div>
-        `).join('') || '<p class="text-xs text-slate-500">لا توجد أصناف</p>';
-      }
     }
 
     function renderOrders() {
@@ -458,20 +340,18 @@
       container.innerHTML = adminOrders.map(ord => {
         let itemsHTML = '';
         if (ord.items && Array.isArray(ord.items)) {
-          itemsHTML = ord.items.map(i => `<div class="text-[11px] text-amber-300">• ${sanitizeHTML(i.name)} (x${sanitizeHTML(String(i.qty))}) = ${sanitizeHTML(String(i.price))}ج</div>`).join('');
+          itemsHTML = ord.items.map(i => `<div class="text-[11px] text-amber-300">• ${i.name} (x${i.qty}) = ${i.price}ج</div>`).join('');
         }
         return `
           <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div class="space-y-1 w-full">
-              <h4 class="font-black text-xs text-white">طلب #${ord.id} - ${sanitizeHTML(ord.customer_name || ord.name)}</h4>
-              <p class="text-xs text-slate-300"><b>الهاتف:</b> ${sanitizeHTML(ord.phone)} | <b>العنوان:</b> ${sanitizeHTML(ord.address)}</p>
-              <div class="bg-slate-950 p-2 rounded-xl mt-1 space-y-0.5">
-                ${itemsHTML || '<span class="text-xs text-slate-500">تفاصيل الأصناف غير متوفرة</span>'}
-              </div>
+              <h4 class="font-black text-xs text-white">طلب #${ord.id} - ${ord.customer_name || 'عميل'}</h4>
+              <p class="text-xs text-slate-300"><b>الهاتف:</b> ${ord.phone} | <b>العنوان:</b> ${ord.address}</p>
+              <div class="bg-slate-950 p-2 rounded-xl mt-1 space-y-0.5">${itemsHTML}</div>
             </div>
-            <div class="flex sm:flex-col justify-between items-center sm:items-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+            <div class="flex items-center gap-2">
               <span class="text-base font-black text-brand-500">${ord.total} جنيه</span>
-              <button onclick="deleteOrder(${ord.id})" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-bold"><i class="fa-solid fa-trash"></i> حذف</button>
+              <button onclick="deleteOrder(${ord.id})" class="bg-rose-500/20 text-rose-400 px-3 py-1.5 rounded-xl text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
         `;
@@ -479,10 +359,9 @@
     }
 
     async function deleteOrder(id) {
-      if (confirm('هل أنت متأكد من حذف هذا الطلب من السحابة؟')) {
-        const { error } = await supabaseClient.from('orders').delete().eq('id', id);
-        if (error) alert('فشل الحذف: ' + error.message);
-        else await loadOrders();
+      if (confirm('هل أنت متأكد من حذف الطلب؟')) {
+        await supabaseClient.from('orders').delete().eq('id', id);
+        await loadOrders();
       }
     }
 
@@ -491,7 +370,7 @@
       document.getElementById('editOriginalName').value = '';
       document.getElementById('modalItemName').value = '';
       document.getElementById('modalItemPrice').value = '';
-      document.getElementById('modalItemFile').value = '';
+      document.getElementById('modalItemImgUrl').value = '';
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -502,7 +381,7 @@
       document.getElementById('modalItemName').value = p.name;
       document.getElementById('modalItemPrice').value = p.price;
       document.getElementById('modalItemCategory').value = p.category || 'طواجن ورئيسي';
-      document.getElementById('modalItemFile').value = '';
+      document.getElementById('modalItemImgUrl').value = p.img || '';
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -515,34 +394,16 @@
       const name = document.getElementById('modalItemName').value.trim();
       const price = parseFloat(document.getElementById('modalItemPrice').value);
       const category = document.getElementById('modalItemCategory').value;
-      const fileInput = document.getElementById('modalItemFile');
+      const img = document.getElementById('modalItemImgUrl').value.trim() || 'https://picsum.photos/seed/food/300/200';
 
       if (!name || isNaN(price)) {
         alert('أدخل اسم الصنف والسعر بشكل صحيح');
         return;
       }
 
-      let img = 'https://picsum.photos/seed/food/300/200';
-      if (oldName && adminProducts.find(p => p.name === oldName)) {
-        img = adminProducts.find(p => p.name === oldName).img;
-      }
-
-      if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          img = e.target.result;
-          await executeUpsert(oldName, name, price, category, img);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        await executeUpsert(oldName, name, price, category, img);
-      }
-    }
-
-    async function executeUpsert(oldName, name, price, category, img) {
       const { error } = await supabaseClient.from('menu').upsert([{ name, price, category, img, available: true }], { onConflict: 'name' });
       if (error) {
-        alert('فشل الحفظ بسبب صلاحيات RLS أو خطأ في الاتصال: ' + error.message);
+        alert('خطأ أثناء الحفظ: ' + error.message);
         return;
       }
 
@@ -552,45 +413,26 @@
 
       closeProductModal();
       await loadProducts();
-      alert('تم حفظ الصنف بنجاح وظهر عند الزبائن! 🚀');
+      alert('تم حفظ الصنف بنجاح وظهر في المنيو! 🚀');
     }
 
-    async function deleteProduct(idx) {
-      const p = adminProducts[idx];
-      if (!p) return;
-      if (confirm(`هل أنت متأكد من حذف ${p.name} نهائياً؟`)) {
-        const { error } = await supabaseClient.from('menu').delete().eq('name', p.name);
-        if (error) alert('فشل الحذف: ' + error.message);
-        else await loadProducts();
+    async function deleteProduct(name) {
+      if (confirm(`هل أنت متأكد من حذف ${name}؟`)) {
+        await supabaseClient.from('menu').delete().eq('name', name);
+        await loadProducts();
       }
     }
 
     async function saveGeneralSettings() {
       const store_name = document.getElementById('settingStoreName').value.trim();
       const whatsapp_phone = document.getElementById('settingWhatsapp').value.trim();
-      const newPassword = document.getElementById('newAdminPassword').value.trim();
-
-      const { error } = await supabaseClient.from('settings').upsert({ id: 1, store_name, whatsapp_phone, is_open: isStoreOpen });
-      if (error) {
-        alert('فشل حفظ الإعدادات: ' + error.message);
-        return;
-      }
-
-      if (newPassword && newPassword.length >= 6) {
-        const { error: passError } = await supabaseClient.auth.updateUser({ password: newPassword });
-        if (passError) {
-          alert('فشل تحديث كلمة المرور: ' + passError.message);
-          return;
-        }
-        alert('تم تحديث إعدادات المطعم وكلمة المرور السحابية بنجاح! 🔒');
-      } else {
-        alert('تم حفظ الإعدادات بنجاح! 🚀');
-      }
+      await supabaseClient.from('settings').upsert({ id: 1, store_name, whatsapp_phone, is_open: isStoreOpen });
+      alert('تم حفظ الإعدادات بنجاح! 🚀');
       await loadSettings();
     }
 
     function setupQR() {
-      const customerMenuUrl = "https://apdo756290aa-svg.github.io/Egyptian-restaurant-/?v=1";
+      const customerMenuUrl = window.location.href.replace('admin.html', 'index.html');
       document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(customerMenuUrl)}`;
     }
 
@@ -602,10 +444,7 @@
     function switchTab(id) {
       document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
       document.getElementById('tab-' + id)?.classList.remove('hidden');
-      document.getElementById('backBtn').classList.toggle('hidden', id === 'dashboard');
     }
-
-    function goBackTab() { switchTab('dashboard'); }
   </script>
 </body>
 </html>
