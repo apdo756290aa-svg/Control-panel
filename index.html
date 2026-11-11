@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>لوحة التحكم الآمنة - المطعم المصري</title>
+  <title>لوحة التحكم - المطعم المصري</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -175,11 +175,12 @@
 
     <!-- QR Code -->
     <section id="tab-extras" class="admin-section hidden space-y-3">
-      <h3 class="font-bold text-base text-white">كود QR الخاص بالمنيو</h3>
+      <h3 class="font-bold text-base text-white">كود QR الخاص بالمنيو (صفحة الزبون)</h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
         <div class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
           <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain">
         </div>
+        <p class="text-xs text-slate-400">امسح الكود لعرض صفحة الزبون مباشرة</p>
         <button onclick="window.print()" class="bg-slate-800 text-white font-bold py-2.5 px-5 rounded-xl text-xs">طباعة كود QR</button>
       </div>
     </section>
@@ -213,7 +214,7 @@
         </div>
       </div>
       <div>
-        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة (رابط)</label>
+        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة (رابط مباشر)</label>
         <input id="modalItemImgUrl" type="text" placeholder="https://..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
       </div>
       <div class="flex gap-2 pt-2">
@@ -292,16 +293,22 @@
       if (data) {
         adminOrders = data;
         renderOrders();
+        renderCustomersFromOrders(data);
       }
     }
 
-    async function loadCustomers() {
-      const { data } = await supabaseClient.from('orders').select('customer_name, phone, address');
+    function renderCustomersFromOrders(ordersList) {
       const tbody = document.getElementById('customersTableBody');
-      if (!tbody || !data) return;
-      
-      const uniqueCustomers = Array.from(new Set(data.map(s => s.phone)))
-        .map(phone => data.find(s => s.phone === phone));
+      if (!tbody) return;
+
+      if (!ordersList || ordersList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-slate-500">لا توجد سجلات عملاء بعد</td></tr>`;
+        return;
+      }
+
+      // تصفية العملاء الفريدين بناءً على رقم الهاتف
+      const uniqueCustomers = Array.from(new Set(ordersList.map(o => o.phone)))
+        .map(phone => ordersList.find(o => o.phone === phone));
 
       tbody.innerHTML = uniqueCustomers.map(c => `
         <tr class="hover:bg-slate-800/40">
@@ -309,7 +316,7 @@
           <td class="p-3 text-slate-300">${c.phone || '-'}</td>
           <td class="p-3 text-slate-400">${c.address || '-'}</td>
         </tr>
-      `).join('') || `<tr><td colspan="3" class="p-4 text-center text-slate-500">لا توجد سجلات عملاء بعد</td></tr>`;
+      `).join('');
     }
 
     function renderProducts() {
@@ -413,7 +420,7 @@
 
       closeProductModal();
       await loadProducts();
-      alert('تم حفظ الصنف بنجاح وظهر في المنيو! 🚀');
+      alert('تم حفظ الصنف بنجاح وظهر في المنيو للزبائن! 🚀');
     }
 
     async function deleteProduct(name) {
@@ -432,7 +439,8 @@
     }
 
     function setupQR() {
-      const customerMenuUrl = window.location.href.replace('admin.html', 'index.html');
+      // رابط صفحة الزبون الثابت على GitHub Pages الخاص بك
+      const customerMenuUrl = "https://apdo756290aa-svg.github.io/Egyptian-restaurant-/index.html";
       document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(customerMenuUrl)}`;
     }
 
