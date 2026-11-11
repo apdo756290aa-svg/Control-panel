@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>لوحة التحكم المؤمنة - المطعم المصري</title>
+  <title>لوحة التحكم الآمنة - المطعم المصري</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -27,28 +27,28 @@
   <style>
     body { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen pb-20 overflow-x-hidden">
 
-  <!-- صفحة أو نافذة تسجيل الدخول الأمنية (PIN Code) -->
+  <!-- نافذة تسجيل الدخول الآمنة بـ Supabase Auth -->
   <div id="adminLoginModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 text-center space-y-5 shadow-2xl">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-3xl p-6 text-center space-y-4 shadow-2xl">
       <div class="w-16 h-16 rounded-2xl bg-brand-500/20 text-brand-500 mx-auto flex items-center justify-center text-2xl shadow-inner">
-        <i class="fa-solid fa-shield-halved"></i>
+        <i class="fa-solid fa-lock"></i>
       </div>
       <div>
-        <h2 class="text-lg font-black text-white">لوحة التحكم المحمية</h2>
-        <p class="text-xs text-slate-400 mt-1">يرجى إدخال رمز الأمان (PIN) للمتابعة</p>
+        <h2 class="text-lg font-black text-white">تسجيل دخول الأدمن</h2>
+        <p class="text-xs text-slate-400 mt-1">أدخل بريدك الإلكتروني وكلمة المرور للمتابعة</p>
       </div>
-      <div>
-        <input id="adminPinInput" type="password" maxlength="6" placeholder="أدخل رمز السر (مثال: 1234)" class="w-full text-center tracking-widest text-lg p-3.5 bg-slate-950 border border-slate-800 rounded-2xl text-white outline-none focus:ring-2 focus:ring-brand-500">
+      <div class="space-y-3 pt-2">
+        <input id="adminEmailInput" type="email" placeholder="admin@restaurant.com" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
+        <input id="adminPasswordInput" type="password" placeholder="كلمة المرور" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
       </div>
-      <button onclick="verifyAdminPin()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-2xl text-xs transition shadow-lg">
+      <button onclick="loginAdminAuth()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-2xl text-xs transition shadow-lg">
         دخول لوحة التحكم 🔓
       </button>
-      <p class="text-[10px] text-slate-500">الباسورد الافتراضي: <b>1234</b></p>
+      <p id="loginErrorMsg" class="text-[11px] text-rose-400 hidden"></p>
     </div>
   </div>
 
@@ -68,21 +68,24 @@
           <i class="fa-solid fa-gauge-high text-sm sm:text-base"></i>
         </div>
         <div class="min-w-0">
-          <h1 class="font-extrabold text-xs sm:text-base text-white truncate">إدارة المطعم المصري</h1>
+          <h1 class="font-extrabold text-xs sm:text-base text-white truncate" id="headerStoreName">إدارة المطعم المصري</h1>
           <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold flex items-center gap-1">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="truncate">لوحة التحكم الآمنة</span>
+            <span class="truncate" id="adminSessionStatus">متصل بـ RLS ومصادقة الآمنة</span>
           </p>
         </div>
       </div>
 
       <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-        <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 px-2.5 sm:px-3 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-300">
+        <a href="https://apdo756290aa-svg.github.io/Egyptian-restaurant-/?v=1" target="_blank" class="bg-slate-800 hover:bg-slate-700 px-2.5 sm:px-3 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-300">
           <i class="fa-solid fa-globe text-brand-500"></i>
-          <span class="hidden xs:inline">عرض</span>
+          <span class="hidden xs:inline">عرض الزبون</span>
         </a>
         <button onclick="toggleStoreStatus()" id="storeStatusBtn" class="bg-emerald-600 hover:bg-emerald-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white">
           مفتوح 🟢
+        </button>
+        <button onclick="logoutAdmin()" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-2.5 py-2 rounded-xl text-[11px] font-bold transition" title="خروج">
+          <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
     </div>
@@ -120,17 +123,14 @@
           <i class="fa-solid fa-users w-4 text-brand-500"></i> سجل العملاء
         </button>
         <button onclick="switchTab('settings'); toggleSidebar();" id="tab-btn-settings" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
-          <i class="fa-solid fa-gears w-4 text-brand-500"></i> إعدادات المطعم العامة
+          <i class="fa-solid fa-gears w-4 text-brand-500"></i> إعدادات المطعم والأمان
         </button>
         <button onclick="switchTab('extras'); toggleSidebar();" id="tab-btn-extras" class="sidebar-btn w-full text-right px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700">
           <i class="fa-solid fa-qrcode w-4 text-brand-500"></i> كود QR للزبائن
         </button>
       </div>
     </div>
-
-    <div class="border-t border-slate-800 pt-3 mt-4 text-center text-[10px] text-slate-500">
-      المطعم المصري © 2026
-    </div>
+    <div class="border-t border-slate-800 pt-3 mt-4 text-center text-[10px] text-slate-500">المطعم المصري © 2026</div>
   </aside>
 
   <!-- Main Content Container -->
@@ -140,227 +140,154 @@
     <section id="tab-dashboard" class="admin-section space-y-4 sm:space-y-5">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
         <button onclick="switchTab('products'); openAddProductModal();" class="bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-700 hover:to-brand-600 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-md">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-sm"></i>
-            <span>فتح المنيو / إضافة وجبة</span>
-          </div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-plus-circle text-sm"></i><span>إضافة وجبة جديدة</span></div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
-
         <button onclick="switchTab('orders')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-receipt text-brand-500 text-sm"></i>
-            <span>مراجعة الطلبات الواردة</span>
-          </div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500 text-sm"></i><span>مراجعة الطلبات الواردة</span></div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
-
         <button onclick="switchTab('settings')" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-white font-bold py-3 px-3.5 rounded-xl text-xs transition flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-truck-fast text-brand-500 text-sm"></i>
-            <span>إعدادات التوصيل</span>
-          </div>
+          <div class="flex items-center gap-2"><i class="fa-solid fa-gears text-brand-500 text-sm"></i><span>إعدادات المطعم</span></div>
           <i class="fa-solid fa-chevron-left text-[10px]"></i>
         </button>
       </div>
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
-          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
-            <span class="truncate">إجمالي المبيعات</span>
-            <i class="fa-solid fa-wallet text-emerald-400 text-sm"></i>
-          </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white"><span id="statTodaySales">0</span> <span class="text-[10px] sm:text-sm font-normal text-slate-400">ج</span></h3>
-          <p class="text-[9px] sm:text-[10px] text-emerald-400 font-bold truncate">محدث فوري</p>
+          <div class="text-slate-400 text-xs font-bold">إجمالي المبيعات</div>
+          <h3 class="text-xl sm:text-3xl font-black text-white"><span id="statTodaySales">0</span> ج</h3>
         </div>
-
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
-          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
-            <span class="truncate">عدد الطلبات</span>
-            <i class="fa-solid fa-bag-shopping text-brand-500 text-sm"></i>
-          </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTodayOrders">0 <span class="text-[10px] sm:text-sm font-normal text-slate-400">طلب</span></h3>
-          <p class="text-[9px] sm:text-[10px] text-slate-400 truncate">كاش عند الاستلام</p>
+          <div class="text-slate-400 text-xs font-bold">عدد الطلبات</div>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTodayOrders">0 طلب</h3>
         </div>
-
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
-          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
-            <span class="truncate">الأصناف</span>
-            <i class="fa-solid fa-utensils text-sky-400 text-sm"></i>
-          </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalItems">0 <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span></h3>
-          <p class="text-[9px] sm:text-[10px] text-sky-400 font-bold truncate">نشط في المنيو</p>
+          <div class="text-slate-400 text-xs font-bold">الأصناف النشطة</div>
+          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalItems">0 صنف</h3>
         </div>
-
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-5 shadow-sm space-y-1.5">
-          <div class="flex justify-between items-center text-slate-400 text-[11px] sm:text-xs font-bold">
-            <span class="truncate">العملاء</span>
-            <i class="fa-solid fa-user-group text-amber-400 text-sm"></i>
-          </div>
-          <h3 class="text-xl sm:text-3xl font-black text-white" id="statTotalCustomers">1 <span class="text-[10px] sm:text-sm font-normal text-slate-400">عميل</span></h3>
-          <p class="text-[9px] sm:text-[10px] text-amber-400 font-bold truncate">مسجل</p>
+          <div class="text-slate-400 text-xs font-bold">حالة الحماية</div>
+          <h3 class="text-sm font-black text-emerald-400 pt-2">مفعل (RLS + Auth)</h3>
         </div>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
         <h3 class="font-bold text-xs sm:text-sm flex items-center gap-2 text-white border-b border-slate-800 pb-2.5">
-          <i class="fa-solid fa-fire text-brand-500"></i>
-          <span>أصناف المنيو الحالي</span>
+          <i class="fa-solid fa-fire text-brand-500"></i> أصناف المنيو الحالي
         </h3>
         <div id="topSellingList" class="divide-y divide-slate-800/60"></div>
       </div>
     </section>
 
-    <!-- 2. إدارة الطلبات -->
+    <!-- 2. الطلبات (تعرض الأصناف بالتفصيل وبأمان ضد XSS) -->
     <section id="tab-orders" class="admin-section hidden space-y-3 sm:space-y-4">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
-          <i class="fa-solid fa-receipt text-brand-500"></i>
-          <span>سجل الطلبات الواردة</span>
-        </h3>
-        <button onclick="loadOrdersAdmin()" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition">
-          <i class="fa-solid fa-rotate-right ml-1"></i> تحديث
-        </button>
+        <h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500"></i> سجل الطلبات الواردة</h3>
+        <button onclick="loadOrders()" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold">تحديث</button>
       </div>
       <div id="adminOrdersContainer" class="space-y-3"></div>
     </section>
 
-    <!-- 3. إدارة المنتجات -->
+    <!-- 3. المنتجات -->
     <section id="tab-products" class="admin-section hidden space-y-3 sm:space-y-4">
       <div class="flex justify-between items-center">
-        <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
-          <i class="fa-solid fa-utensils text-brand-500"></i>
-          <span>إدارة الأصناف والوجبات</span>
-        </h3>
-        <button onclick="openAddProductModal()" class="bg-brand-500 hover:bg-brand-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-lg">
-          <i class="fa-solid fa-plus"></i>
-          <span>صنف جديد</span>
-        </button>
+        <h3 class="font-bold text-base text-white">إدارة أصناف المنيو</h3>
+        <button onclick="openAddProductModal()" class="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg">+ صنف جديد</button>
       </div>
-      <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"></div>
+      <div id="adminProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
     </section>
 
-    <!-- 4. إدارة الأقسام -->
+    <!-- 4. الأقسام -->
     <section id="tab-categories" class="admin-section hidden space-y-3 sm:space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
-          <i class="fa-solid fa-list text-brand-500"></i>
-          <span>إدارة الأقسام</span>
-        </h3>
-        <button onclick="addCategoryPrompt()" class="bg-brand-500 hover:bg-brand-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition shadow-lg">
-          <i class="fa-solid fa-plus ml-1"></i> إضافة قسم
-        </button>
-      </div>
-      <div id="adminCategoriesContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <h3 class="font-bold text-base text-white">إدارة الأقسام</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         <div class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl flex justify-between items-center">
-          <span class="font-bold text-xs text-white">طواجن ورئيسي</span>
+          <span class="font-bold text-xs text-white">طواجن ورئيسي، أكلات بحرية، مشويات، مقبلات، حلويات، مشروبات ساخنة، مشروبات ساقعة</span>
           <span class="text-[10px] bg-brand-500/20 text-brand-500 px-2.5 py-1 rounded-full font-bold">نشط</span>
         </div>
       </div>
     </section>
 
-    <!-- 5. إدارة العملاء -->
+    <!-- 5. العملاء -->
     <section id="tab-customers" class="admin-section hidden space-y-3 sm:space-y-4">
-      <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
-        <i class="fa-solid fa-users text-brand-500"></i>
-        <span>سجل العملاء والمشترين</span>
-      </h3>
+      <h3 class="font-bold text-base text-white">سجل العملاء</h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-          <table class="w-full text-right text-xs">
-            <thead class="bg-slate-800/80 text-slate-400 border-b border-slate-800">
-              <tr>
-                <th class="p-3">الاسم</th>
-                <th class="p-3">الهاتف</th>
-                <th class="p-3">العنوان</th>
-                <th class="p-3">الطلبات</th>
-              </tr>
-            </thead>
-            <tbody id="customersTableBody" class="divide-y divide-slate-800/60"></tbody>
-          </table>
-        </div>
+        <table class="w-full text-right text-xs">
+          <thead class="bg-slate-800/80 text-slate-400 border-b border-slate-800">
+            <tr><th class="p-3">الاسم</th><th class="p-3">الهاتف</th><th class="p-3">العنوان</th></tr>
+          </thead>
+          <tbody id="customersTableBody" class="divide-y divide-slate-800/60"></tbody>
+        </table>
       </div>
     </section>
 
-    <!-- 6. إعدادات المطعم العامة -->
-    <section id="tab-settings" class="admin-section hidden space-y-3 sm:space-y-4">
-      <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
-        <i class="fa-solid fa-gears text-brand-500"></i>
-        <span>إعدادات المطعم والسيستم</span>
-      </h3>
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-3.5 shadow-sm">
+    <!-- 6. إعدادات المطعم العامة وأمان الحساب -->
+    <section id="tab-settings" class="admin-section hidden space-y-4">
+      <h3 class="font-bold text-base text-white">إعدادات المطعم العامة والأمان</h3>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">اسم المطعم في الموقع</label>
-          <input id="settingStoreName" type="text" class="w-full p-2.5 sm:p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" value="المطعم المصري">
+          <label class="block text-xs font-bold text-slate-300 mb-1">اسم المطعم</label>
+          <input id="settingStoreName" type="text" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none" value="المطعم المصري">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">رقم الواتساب لاستقبال الطلبات</label>
-          <input id="settingPhone" type="text" class="w-full p-2.5 sm:p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500" value="201148041323">
+          <label class="block text-xs font-bold text-slate-300 mb-1">رقم واتساب الإدارة</label>
+          <input id="settingWhatsapp" type="text" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none" value="201148041323">
         </div>
-        <button onclick="saveGeneralSettings()" class="w-full sm:w-auto bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl text-xs transition shadow-lg">
-          حفظ التغييرات 🚀
-        </button>
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">كلمة المرور الجديدة للأدمن</label>
+          <input id="newAdminPassword" type="password" placeholder="اتركه فارغاً إن لم ترد التغيير" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
+        </div>
+        <button onclick="saveGeneralSettings()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl text-xs transition">حفظ التعديلات والإعدادات 🚀</button>
       </div>
     </section>
 
-    <!-- 7. الكيو آر للزبائن -->
+    <!-- 7. QR Code -->
     <section id="tab-extras" class="admin-section hidden space-y-3 sm:space-y-4">
-      <h3 class="font-bold text-xs sm:text-base flex items-center gap-2 text-white">
-        <i class="fa-solid fa-qrcode text-brand-500"></i>
-        <span>كود QR الخاص بالزبائن (للمنيو)</span>
-      </h3>
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 text-center space-y-4">
-        <p class="text-xs text-slate-400">امسح الكود ليعرض منيو المطعم مباشرة لزبائنك</p>
-        <div id="qrcodeContainer" class="bg-white p-3 sm:p-4 rounded-2xl w-40 h-40 sm:w-48 sm:h-48 mx-auto flex items-center justify-center shadow-lg">
+      <h3 class="font-bold text-base text-white">كود QR الخاص بالمنيو</h3>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
+        <div id="qrcodeContainer" class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
           <img id="qrImage" src="" alt="QR Code" class="w-full h-full object-contain">
         </div>
-        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition">
-          <i class="fa-solid fa-print ml-1"></i> طباعة كود QR
-        </button>
+        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-5 rounded-xl text-xs">طباعة كود QR</button>
       </div>
     </section>
-
   </main>
 
-  <!-- Product Modal (Add/Edit) with Image File Picker -->
-  <div id="productModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl sm:rounded-3xl p-5 space-y-3.5 shadow-2xl">
-      <h3 id="productModalTitle" class="font-extrabold text-sm sm:text-base text-white">إضافة وجبة أو صنف جديد</h3>
-      <input type="hidden" id="editProductIndex" value="-1">
-      
-      <div class="space-y-3">
-        <!-- تم اصلاح حقل اسم الصنف هنا ليعمل تماماً -->
+  <!-- Product Modal (Add/Edit) -->
+  <div id="productModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-5 space-y-3 shadow-2xl">
+      <h3 id="productModalTitle" class="font-bold text-base text-white">إضافة أو تعديل صنف</h3>
+      <input type="hidden" id="editOriginalName" value="">
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">اسم الصنف</label>
+        <input id="modalItemName" type="text" placeholder="مثال: طاجن لحم" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
+      </div>
+      <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">اسم الصنف</label>
-          <input id="modalItemName" type="text" placeholder="مثال: طاجن لحم" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
-        </div>
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">السعر (جنيه)</label>
-            <input id="modalItemPrice" type="number" placeholder="120" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none focus:ring-2 focus:ring-brand-500">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-300 mb-1">القسم</label>
-            <select id="modalItemCategory" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
-              <option value="طواجن ورئيسي">طواجن ورئيسي</option>
-              <option value="أكلات بحرية">أكلات بحرية</option>
-              <option value="مشويات">مشويات</option>
-              <option value="مقبلات">مقبلات</option>
-              <option value="حلويات">حلويات</option>
-              <option value="مشروبات ساخنة">مشروبات ساخنة</option>
-              <option value="مشروبات ساقعة">مشروبات ساقعة</option>
-            </select>
-          </div>
+          <label class="block text-xs text-slate-300 mb-1">السعر</label>
+          <input id="modalItemPrice" type="number" placeholder="120" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1">صورة الوجبة (اختر ملف من جهازك)</label>
-          <input id="modalItemFile" type="file" accept="image/*" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 file:ml-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brand-500 file:text-white hover:file:bg-brand-600">
+          <label class="block text-xs text-slate-300 mb-1">القسم</label>
+          <select id="modalItemCategory" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
+            <option value="طواجن ورئيسي">طواجن ورئيسي</option>
+            <option value="أكلات بحرية">أكلات بحرية</option>
+            <option value="مشويات">مشويات</option>
+            <option value="مقبلات">مقبلات</option>
+            <option value="حلويات">حلويات</option>
+            <option value="مشروبات ساخنة">مشروبات ساخنة</option>
+            <option value="مشروبات ساقعة">مشروبات ساقعة</option>
+          </select>
         </div>
       </div>
-
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة</label>
+        <input id="modalItemFile" type="file" accept="image/*" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300">
+      </div>
       <div class="flex gap-2 pt-2">
-        <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 hover:bg-brand-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-lg">حفظ ونشر</button>
-        <button onclick="closeProductModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-xs transition">إلغاء</button>
+        <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 text-white font-bold py-2.5 rounded-xl text-xs">حفظ ونشر</button>
+        <button onclick="closeProductModal()" class="bg-slate-800 text-slate-300 px-4 py-2.5 rounded-xl text-xs">إلغاء</button>
       </div>
     </div>
   </div>
@@ -370,198 +297,200 @@
     const SUPABASE_URL = "https://nktadskksxbvgvxxtyoe.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_GOohTFjLF2Cjm70fLTrayA_vUlhd06f";
     let supabaseClient = null;
-
     let adminProducts = [];
     let adminOrders = [];
+    let isStoreOpen = true;
 
     window.addEventListener('DOMContentLoaded', async () => {
-      if (sessionStorage.getItem('admin_logged_in') === 'true') {
-        document.getElementById('adminLoginModal').classList.add('hidden');
-      }
-
       if (window.supabase) {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        await loadProductsFromSupabase();
-        await loadOrdersAdmin();
-      } else {
-        renderAdminProducts();
-        renderDashboardStats();
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+          document.getElementById('adminLoginModal').classList.add('hidden');
+          // عرض إيميل الحساب المسجل حقيقياً بدلاً من النص الثابت
+          document.getElementById('adminSessionStatus').innerText = session.user.email;
+          await loadAllData();
+        }
       }
-      checkInitialStoreStatus();
-      renderCustomersTable();
       setupQR();
     });
 
-    function verifyAdminPin() {
-      const pinInput = document.getElementById('adminPinInput').value.trim();
-      const correctPin = "1234";
+    async function loginAdminAuth() {
+      const email = document.getElementById('adminEmailInput').value.trim();
+      const password = document.getElementById('adminPasswordInput').value.trim();
+      const errEl = document.getElementById('loginErrorMsg');
 
-      if (pinInput === correctPin) {
-        sessionStorage.setItem('admin_logged_in', 'true');
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        errEl.innerText = "خطأ في البريد أو كلمة المرور!";
+        errEl.classList.remove('hidden');
+      } else {
         document.getElementById('adminLoginModal').classList.add('hidden');
-      } else {
-        alert('رمز الأمان غير صحيح! (الرمز الافتراضي: 1234)');
+        document.getElementById('adminSessionStatus').innerText = data.session.user.email;
+        await loadAllData();
       }
     }
 
-    function toggleSidebar() {
-      const drawer = document.getElementById('sidebarDrawer');
-      const overlay = document.getElementById('sidebarOverlay');
-      drawer.classList.toggle('translate-x-full');
-      overlay.classList.toggle('hidden');
+    async function logoutAdmin() {
+      await supabaseClient.auth.signOut();
+      location.reload();
     }
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
-      document.getElementById('tab-' + tabId)?.classList.remove('hidden');
-
-      const backBtn = document.getElementById('backBtn');
-      if (tabId === 'dashboard') {
-        backBtn.classList.add('hidden');
-      } else {
-        backBtn.classList.remove('hidden');
-      }
-
-      document.querySelectorAll('.sidebar-btn').forEach(btn => {
-        btn.classList.remove('bg-brand-500', 'text-white', 'shadow');
-        btn.classList.add('bg-slate-800', 'text-slate-300');
-      });
-      const activeBtn = document.getElementById('tab-btn-' + tabId);
-      if (activeBtn) {
-        activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
-        activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow');
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    async function loadAllData() {
+      await loadSettings();
+      await loadProducts();
+      await loadOrders();
+      await loadCustomers();
     }
 
-    function goBackTab() {
-      switchTab('dashboard');
+    function sanitizeHTML(str) {
+      if (!str) return '';
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
     }
 
-    async function loadProductsFromSupabase() {
-      if (!supabaseClient) return;
-      try {
-        const { data, error } = await supabaseClient.from('menu').select('*');
-        if (data) {
-          adminProducts = data;
-          renderAdminProducts();
-          renderDashboardStats();
+    async function loadSettings() {
+      const { data } = await supabaseClient.from('settings').select('*').eq('id', 1).single();
+      if (data) {
+        isStoreOpen = data.is_open !== false;
+        updateStoreButtonUI();
+        if (data.store_name) {
+          document.getElementById('headerStoreName').innerText = data.store_name;
+          document.getElementById('settingStoreName').value = data.store_name;
         }
-      } catch (e) {
-        console.log("خطأ في جلب المنيو", e);
+        if (data.whatsapp_phone) {
+          document.getElementById('settingWhatsapp').value = data.whatsapp_phone;
+        }
       }
     }
 
-    async function loadOrdersAdmin() {
-      if (!supabaseClient) return;
-      try {
-        const { data } = await supabaseClient.from('orders').select('*');
-        if (data) {
-          adminOrders = data;
-        }
-      } catch (e) {
-        adminOrders = JSON.parse(localStorage.getItem('real_orders_history') || '[]');
-      }
+    async function toggleStoreStatus() {
+      isStoreOpen = !isStoreOpen;
+      updateStoreButtonUI();
+      const { error } = await supabaseClient.from('settings').upsert({ id: 1, is_open: isStoreOpen });
+      if (error) alert('فشل تحديث حالة المحل: ' + error.message);
+    }
 
-      document.getElementById('ordersBadge').innerText = adminOrders.length;
-      document.getElementById('statTodayOrders').innerHTML = adminOrders.length + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">طلب</span>';
+    function updateStoreButtonUI() {
+      const btn = document.getElementById('storeStatusBtn');
+      if (isStoreOpen) {
+        btn.innerText = 'مفتوح 🟢';
+        btn.className = 'bg-emerald-600 hover:bg-emerald-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
+      } else {
+        btn.innerText = 'مغلق 🔴';
+        btn.className = 'bg-rose-600 hover:bg-rose-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
+      }
+    }
+
+    async function loadProducts() {
+      const { data, error } = await supabaseClient.from('menu').select('*');
+      if (error) { alert('خطأ في جلب المنيو: ' + error.message); return; }
+      if (data) {
+        adminProducts = data;
+        renderProducts();
+      }
+    }
+
+    async function loadOrders() {
+      const { data, error } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
+      if (error) { alert('خطأ في جلب الطلبات: ' + error.message); return; }
+      if (data) {
+        adminOrders = data;
+        renderOrders();
+      }
+    }
+
+    async function loadCustomers() {
+      const { data } = await supabaseClient.from('orders').select('customer_name, phone, address');
+      const tbody = document.getElementById('customersTableBody');
+      if (!tbody || !data) return;
       
-      let totalSales = 0;
-      adminOrders.forEach(o => { totalSales += (parseFloat(o.total) || 0); });
-      document.getElementById('statTodaySales').innerHTML = totalSales + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">ج</span>';
+      const uniqueCustomers = Array.from(new Set(data.map(s => s.phone)))
+        .map(phone => data.find(s => s.phone === phone));
 
-      const container = document.getElementById('adminOrdersContainer');
-      if (!container) return;
-
-      if (adminOrders.length === 0) {
-        container.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-xs text-slate-400">لا توجد طلبات جديدة واردة حالياً.</div>`;
-        return;
-      }
-
-      container.innerHTML = adminOrders.map((ord, idx) => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div class="space-y-1 w-full">
-            <div class="flex items-center justify-between sm:justify-start gap-2">
-              <span class="font-black text-white text-xs sm:text-sm">طلب #${ord.id || (idx+1)}</span>
-              <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full">كاش عند الاستلام</span>
-            </div>
-            <p class="text-[11px] sm:text-xs text-slate-300"><b>العميل:</b> ${ord.customer_name || ord.name || 'عميل'} | <b>الهاتف:</b> ${ord.phone}</p>
-            <p class="text-[11px] sm:text-xs text-slate-400"><b>العنوان:</b> ${ord.address}</p>
-            <div class="text-[11px] sm:text-xs text-amber-300 bg-slate-950 p-2 rounded-xl mt-1">
-              ${(ord.items || []).map(i => `• ${i.name} (x${i.qty}) = ${i.price}ج`).join('<br>')}
-            </div>
-          </div>
-          <div class="flex sm:flex-col justify-between items-center sm:items-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
-            <span class="text-sm sm:text-base font-black text-brand-500">${ord.total} جنيه</span>
-            <div class="flex gap-1.5">
-              <button onclick="deleteOrderAdmin(${idx})" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-2.5 py-1.5 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>
-        </div>
-      `).join('');
+      tbody.innerHTML = uniqueCustomers.map(c => `
+        <tr class="hover:bg-slate-800/40">
+          <td class="p-3 font-bold text-white">${sanitizeHTML(c.customer_name)}</td>
+          <td class="p-3 text-slate-300">${sanitizeHTML(c.phone)}</td>
+          <td class="p-3 text-slate-400">${sanitizeHTML(c.address)}</td>
+        </tr>
+      `).join('') || `<tr><td colspan="3" class="p-4 text-center text-slate-500">لا توجد سجلات بعد</td></tr>`;
     }
 
-    function renderAdminProducts() {
-      const container = document.getElementById('adminProductsGrid');
-      if (!container) return;
-
-      if (adminProducts.length === 0) {
-        container.innerHTML = `<p class="text-xs text-slate-500 col-span-full text-center py-6">لا توجد أصناف في المنيو حالياً</p>`;
-        return;
-      }
-
-      container.innerHTML = adminProducts.map((p, idx) => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
-          <div class="relative h-36 sm:h-40 bg-slate-800">
-            <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-full object-cover">
-            <span class="absolute top-2.5 right-2.5 text-xs bg-brand-500 text-white font-black px-2.5 py-0.5 rounded-full shadow-md">${p.price} جـ</span>
-            <span class="absolute bottom-2.5 right-2.5 text-[9px] bg-slate-950/80 text-white px-2 py-0.5 rounded-full">${p.category || 'عام'}</span>
-          </div>
-          <div class="p-3.5 space-y-2.5 flex-grow flex flex-col justify-between">
-            <h4 class="font-bold text-xs sm:text-sm text-white">${p.name}</h4>
-            <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-              <button onclick="openEditProductModal(${idx})" title="تعديل" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 flex items-center justify-center transition"><i class="fa-solid fa-pen text-xs"></i></button>
-              <button onclick="deleteProductAdmin('${p.name.replace(/'/g, "\\'")}')" title="حذف" class="w-8 h-8 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 flex items-center justify-center transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
-            </div>
+    function renderProducts() {
+      const grid = document.getElementById('adminProductsGrid');
+      document.getElementById('statTotalItems').innerText = adminProducts.length + ' صنف';
+      grid.innerHTML = adminProducts.map((p, idx) => `
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 flex flex-col justify-between">
+          <img src="${p.img || 'https://picsum.photos/seed/food/300/200'}" class="w-full h-32 object-cover rounded-xl mb-2">
+          <h4 class="font-bold text-xs text-white">${sanitizeHTML(p.name)}</h4>
+          <span class="text-brand-500 font-black text-sm my-1">${p.price} جنيه</span>
+          <div class="flex gap-2 mt-2">
+            <button onclick="openEditProductModal(${idx})" class="flex-grow bg-sky-500/20 text-sky-400 py-1.5 rounded-xl text-xs font-bold">تعديل ✏️</button>
+            <button onclick="deleteProduct(${idx})" class="flex-grow bg-rose-500/20 text-rose-400 py-1.5 rounded-xl text-xs font-bold">حذف 🗑️</button>
           </div>
         </div>
-      `).join('');
-    }
+      `).join('') || '<p class="text-xs text-slate-500 col-span-full">لا توجد أصناف</p>';
 
-    function renderDashboardStats() {
-      document.getElementById('statTotalItems').innerHTML = adminProducts.length + ' <span class="text-[10px] sm:text-sm font-normal text-slate-400">صنف</span>';
       const topList = document.getElementById('topSellingList');
       if (topList) {
-        if (adminProducts.length === 0) {
-          topList.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">لا توجد أصناف</p>`;
-          return;
-        }
         topList.innerHTML = adminProducts.map((p, idx) => `
           <div class="flex items-center justify-between py-2">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <span class="w-5 h-5 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-[10px] flex-shrink-0">#${idx+1}</span>
-              <span class="font-bold text-xs text-white truncate">${p.name}</span>
+            <div class="flex items-center gap-2.5">
+              <span class="w-5 h-5 rounded-lg bg-brand-500/20 text-brand-500 font-bold flex items-center justify-center text-[10px]">#${idx+1}</span>
+              <span class="font-bold text-xs text-white">${sanitizeHTML(p.name)}</span>
             </div>
-            <span class="text-xs font-black text-brand-500 flex-shrink-0 mr-2">${p.price} ج</span>
+            <span class="text-xs font-black text-brand-500">${p.price} ج</span>
           </div>
-        `).join('');
+        `).join('') || '<p class="text-xs text-slate-500">لا توجد أصناف</p>';
       }
     }
 
-    function renderCustomersTable() {
-      const tbody = document.getElementById('customersTableBody');
-      if (!tbody) return;
-      const u = JSON.parse(localStorage.getItem('user_data') || '{}');
-      if (!u.name) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">لا يوجد عملاء مسجلين حالياً.</td></tr>`;
-        return;
+    function renderOrders() {
+      const container = document.getElementById('adminOrdersContainer');
+      document.getElementById('ordersBadge').innerText = adminOrders.length;
+      document.getElementById('statTodayOrders').innerText = adminOrders.length + ' طلب';
+      
+      let totalSales = 0;
+      adminOrders.forEach(o => totalSales += (parseFloat(o.total) || 0));
+      document.getElementById('statTodaySales').innerText = totalSales;
+
+      container.innerHTML = adminOrders.map(ord => {
+        let itemsHTML = '';
+        if (ord.items && Array.isArray(ord.items)) {
+          // تنقية كاملة لبيانات الأصناف والكميات والأسعار ضد ثغرات XSS
+          itemsHTML = ord.items.map(i => `<div class="text-[11px] text-amber-300">• ${sanitizeHTML(i.name)} (x${sanitizeHTML(String(i.qty))}) = ${sanitizeHTML(String(i.price))}ج</div>`).join('');
+        }
+        return `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div class="space-y-1 w-full">
+              <h4 class="font-black text-xs text-white">طلب #${ord.id} - ${sanitizeHTML(ord.customer_name || ord.name)}</h4>
+              <p class="text-xs text-slate-300"><b>الهاتف:</b> ${sanitizeHTML(ord.phone)} | <b>العنوان:</b> ${sanitizeHTML(ord.address)}</p>
+              <div class="bg-slate-950 p-2 rounded-xl mt-1 space-y-0.5">
+                ${itemsHTML || '<span class="text-xs text-slate-500">تفاصيل الأصناف غير متوفرة</span>'}
+              </div>
+            </div>
+            <div class="flex sm:flex-col justify-between items-center sm:items-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+              <span class="text-base font-black text-brand-500">${ord.total} جنيه</span>
+              <button onclick="deleteOrder(${ord.id})" class="bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-bold"><i class="fa-solid fa-trash"></i> حذف</button>
+            </div>
+          </div>
+        `;
+      }).join('') || '<p class="text-xs text-slate-500">لا توجد طلبات</p>';
+    }
+
+    async function deleteOrder(id) {
+      if (confirm('هل أنت متأكد من حذف هذا الطلب من السحابة؟')) {
+        const { error } = await supabaseClient.from('orders').delete().eq('id', id);
+        if (error) alert('فشل الحذف: ' + error.message);
+        else await loadOrders();
       }
-      tbody.innerHTML = `<tr class="hover:bg-slate-800/40"><td class="p-3 font-bold text-white">${u.name}</td><td class="p-3 text-slate-300">${u.phone}</td><td class="p-3 text-slate-400">${u.address}</td><td class="p-3 font-black text-brand-500">نشط</td></tr>`;
     }
 
     function openAddProductModal() {
-      document.getElementById('productModalTitle').innerText = 'إضافة صنف جديد للمنيو';
-      document.getElementById('editProductIndex').value = '-1';
+      document.getElementById('productModalTitle').innerText = 'إضافة صنف جديد';
+      document.getElementById('editOriginalName').value = '';
       document.getElementById('modalItemName').value = '';
       document.getElementById('modalItemPrice').value = '';
       document.getElementById('modalItemFile').value = '';
@@ -571,7 +500,7 @@
     function openEditProductModal(idx) {
       const p = adminProducts[idx];
       document.getElementById('productModalTitle').innerText = 'تعديل الصنف';
-      document.getElementById('editProductIndex').value = idx;
+      document.getElementById('editOriginalName').value = p.name;
       document.getElementById('modalItemName').value = p.name;
       document.getElementById('modalItemPrice').value = p.price;
       document.getElementById('modalItemCategory').value = p.category || 'طواجن ورئيسي';
@@ -584,113 +513,83 @@
     }
 
     async function saveProductAdmin() {
+      const oldName = document.getElementById('editOriginalName').value.trim();
       const name = document.getElementById('modalItemName').value.trim();
       const price = parseFloat(document.getElementById('modalItemPrice').value);
       const category = document.getElementById('modalItemCategory').value;
       const fileInput = document.getElementById('modalItemFile');
 
       if (!name || isNaN(price)) {
-        alert('يرجى إدخال اسم الصنف والسعر بشكل صحيح');
+        alert('أدخل اسم الصنف والسعر بشكل صحيح');
         return;
       }
 
-      let currentImg = 'https://picsum.photos/seed/food/300/200';
-      const idx = parseInt(document.getElementById('editProductIndex').value);
-      if (idx !== -1 && adminProducts[idx]) {
-        currentImg = adminProducts[idx].img;
+      let img = 'https://picsum.photos/seed/food/300/200';
+      if (oldName && adminProducts.find(p => p.name === oldName)) {
+        img = adminProducts.find(p => p.name === oldName).img;
       }
 
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
         reader.onload = async function(e) {
-          currentImg = e.target.result;
-          await finishSavingToSupabase(name, price, category, currentImg);
+          img = e.target.result;
+          await executeUpsert(oldName, name, price, category, img);
         };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
-        await finishSavingToSupabase(name, price, category, currentImg);
+        await executeUpsert(oldName, name, price, category, img);
       }
     }
 
-    async function finishSavingToSupabase(name, price, category, img) {
-      if (supabaseClient) {
-        try {
-          // استخدام upsert مع الاعتماد على اسم الصنف كمفتاح فريد لمنع التكرار والحذف الوهمي
-          const { error } = await supabaseClient.from('menu').upsert([
-            { name, price, category, img, available: true }
-          ], { onConflict: 'name' });
-
-          if (error) {
-            alert('حدث خطأ أثناء الحفظ في قاعدة البيانات');
-            return;
-          }
-        } catch (e) {
-          console.log("خطأ سوبابيز: ", e);
-        }
+    // عكس الترتيب: عمل الـ upsert أولاً، ولو نجح وحصل تغيير في الاسم امسح القديم بأمان
+    async function executeUpsert(oldName, name, price, category, img) {
+      const { error } = await supabaseClient.from('menu').upsert([{ name, price, category, img, available: true }], { onConflict: 'name' });
+      if (error) {
+        alert('فشل الحفظ بسبب صلاحيات RLS أو خطأ في الاتصال: ' + error.message);
+        return;
       }
 
-      await loadProductsFromSupabase();
+      if (oldName && oldName !== name) {
+        await supabaseClient.from('menu').delete().eq('name', oldName);
+      }
+
       closeProductModal();
-      alert('تم حفظ الصنف بنجاح وظهر فوراً عند الزبائن! 🚀');
+      await loadProducts();
+      alert('تم حفظ الصنف بنجاح وظهر عند الزبائن! 🚀');
     }
 
-    async function deleteProductAdmin(name) {
-      if (confirm(`هل أنت متأكد من حذف الصنف "${name}" نهائياً؟`)) {
-        if (supabaseClient) {
-          try {
-            const { error } = await supabaseClient.from('menu').delete().eq('name', name);
-            if (error) {
-              alert('فشل الحذف من سوبابيز');
-              return;
-            }
-          } catch (e) {
-            console.log("خطأ في الحذف: ", e);
-          }
+    async function deleteProduct(idx) {
+      const p = adminProducts[idx];
+      if (!p) return;
+      if (confirm(`هل أنت متأكد من حذف ${p.name} نهائياً؟`)) {
+        const { error } = await supabaseClient.from('menu').delete().eq('name', p.name);
+        if (error) alert('فشل الحذف: ' + error.message);
+        else await loadProducts();
+      }
+    }
+
+    async function saveGeneralSettings() {
+      const store_name = document.getElementById('settingStoreName').value.trim();
+      const whatsapp_phone = document.getElementById('settingWhatsapp').value.trim();
+      const newPassword = document.getElementById('newAdminPassword').value.trim();
+
+      const { error } = await supabaseClient.from('settings').upsert({ id: 1, store_name, whatsapp_phone, is_open: isStoreOpen });
+      if (error) {
+        alert('فشل حفظ الإعدادات: ' + error.message);
+        return;
+      }
+
+      if (newPassword && newPassword.length >= 6) {
+        const { error: passError } = await supabaseClient.auth.updateUser({ password: newPassword });
+        if (passError) {
+          alert('فشل تحديث كلمة المرور: ' + passError.message);
+          return;
         }
-        await loadProductsFromSupabase();
-        alert('تم الحذف بنجاح واختفى من عند الزبائن تماماً! 🗑️');
-      }
-    }
-
-    async function deleteOrderAdmin(idx) {
-      adminOrders.splice(idx, 1);
-      localStorage.setItem('real_orders_history', JSON.stringify(adminOrders));
-      loadOrdersAdmin();
-    }
-
-    async function toggleStoreStatus() {
-      const btn = document.getElementById('storeStatusBtn');
-      let isOpen = btn.innerText.includes('مفتوح');
-      isOpen = !isOpen;
-
-      if (!isOpen) {
-        btn.innerText = 'مغلق 🔴';
-        btn.className = 'bg-rose-600 hover:bg-rose-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
-        localStorage.setItem('store_is_open', 'false');
+        alert('تم تحديث إعدادات المطعم وكلمة المرور السحابية بنجاح! 🔒');
       } else {
-        btn.innerText = 'مفتوح 🟢';
-        btn.className = 'bg-emerald-600 hover:bg-emerald-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
-        localStorage.setItem('store_is_open', 'true');
+        alert('تم حفظ الإعدادات بنجاح! 🚀');
       }
-
-      if (supabaseClient) {
-        try {
-          await supabaseClient.from('settings').upsert({ id: 1, is_open: isOpen });
-        } catch(e) {}
-      }
-    }
-
-    function checkInitialStoreStatus() {
-      const isOpen = localStorage.getItem('store_is_open');
-      const btn = document.getElementById('storeStatusBtn');
-      if (isOpen === 'false') {
-        btn.innerText = 'مغلق 🔴';
-        btn.className = 'bg-rose-600 hover:bg-rose-700 px-2.5 sm:px-3.5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm text-white';
-      }
-    }
-
-    function saveGeneralSettings() {
-      alert('تم حفظ إعدادات المطعم بنجاح!');
+      await loadSettings();
     }
 
     function setupQR() {
@@ -698,10 +597,18 @@
       document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(customerMenuUrl)}`;
     }
 
-    function addCategoryPrompt() {
-      const cat = prompt('اكتب اسم القسم الجديد:');
-      if (cat) { alert('تم إضافة القسم بنجاح: ' + cat); }
+    function toggleSidebar() {
+      document.getElementById('sidebarDrawer').classList.toggle('translate-x-full');
+      document.getElementById('sidebarOverlay').classList.toggle('hidden');
     }
+
+    function switchTab(id) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+      document.getElementById('tab-' + id)?.classList.remove('hidden');
+      document.getElementById('backBtn').classList.toggle('hidden', id === 'dashboard');
+    }
+
+    function goBackTab() { switchTab('dashboard'); }
   </script>
 </body>
 </html>
