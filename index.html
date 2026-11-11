@@ -214,8 +214,9 @@
         </div>
       </div>
       <div>
-        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة (رابط مباشر)</label>
-        <input id="modalItemImgUrl" type="text" placeholder="https://..." class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white outline-none">
+        <label class="block text-xs text-slate-300 mb-1">صورة الوجبة (اختر من الملفات)</label>
+        <input id="modalItemFile" type="file" accept="image/*" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-500 file:text-white hover:file:bg-brand-600">
+        <input type="hidden" id="modalItemImgBase64" value="">
       </div>
       <div class="flex gap-2 pt-2">
         <button onclick="saveProductAdmin()" class="flex-grow bg-brand-500 text-white font-bold py-2.5 rounded-xl text-xs">حفظ ونشر</button>
@@ -239,13 +240,24 @@
         await loadAllData();
       }
       setupQR();
+
+      // معالجة اختيار الملف من جهاز المستخدم وتكويده لـ Base64 تلقائياً
+      document.getElementById('modalItemFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            document.getElementById('modalItemImgBase64').value = event.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
     });
 
     async function loadAllData() {
       await loadSettings();
       await loadProducts();
       await loadOrders();
-      await loadCustomers();
     }
 
     async function loadSettings() {
@@ -306,7 +318,6 @@
         return;
       }
 
-      // تصفية العملاء الفريدين بناءً على رقم الهاتف
       const uniqueCustomers = Array.from(new Set(ordersList.map(o => o.phone)))
         .map(phone => ordersList.find(o => o.phone === phone));
 
@@ -377,7 +388,8 @@
       document.getElementById('editOriginalName').value = '';
       document.getElementById('modalItemName').value = '';
       document.getElementById('modalItemPrice').value = '';
-      document.getElementById('modalItemImgUrl').value = '';
+      document.getElementById('modalItemFile').value = '';
+      document.getElementById('modalItemImgBase64').value = '';
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -388,7 +400,8 @@
       document.getElementById('modalItemName').value = p.name;
       document.getElementById('modalItemPrice').value = p.price;
       document.getElementById('modalItemCategory').value = p.category || 'طواجن ورئيسي';
-      document.getElementById('modalItemImgUrl').value = p.img || '';
+      document.getElementById('modalItemImgBase64').value = p.img || '';
+      document.getElementById('modalItemFile').value = '';
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -401,7 +414,13 @@
       const name = document.getElementById('modalItemName').value.trim();
       const price = parseFloat(document.getElementById('modalItemPrice').value);
       const category = document.getElementById('modalItemCategory').value;
-      const img = document.getElementById('modalItemImgUrl').value.trim() || 'https://picsum.photos/seed/food/300/200';
+      const base64Img = document.getElementById('modalItemImgBase64').value.trim();
+      
+      let img = base64Img || 'https://picsum.photos/seed/food/300/200';
+      if (oldName && !base64Img) {
+        const existing = adminProducts.find(p => p.name === oldName);
+        if (existing) img = existing.img;
+      }
 
       if (!name || isNaN(price)) {
         alert('أدخل اسم الصنف والسعر بشكل صحيح');
@@ -419,8 +438,12 @@
       }
 
       closeProductModal();
-      await loadProducts();
+      await loadProductsafterSave();
       alert('تم حفظ الصنف بنجاح وظهر في المنيو للزبائن! 🚀');
+    }
+
+    async function loadProductsafterSave() {
+      await loadProducts();
     }
 
     async function deleteProduct(name) {
@@ -439,9 +462,13 @@
     }
 
     function setupQR() {
-      // رابط صفحة الزبون الثابت على GitHub Pages الخاص بك
       const customerMenuUrl = "https://apdo756290aa-svg.github.io/Egyptian-restaurant-/index.html";
-      document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(customerMenuUrl)}`;
+      // استخدام خدمة QR موثوقة ومضمونة لا تظهر مربعات بيضاء
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(customerMenuUrl)}`;
+      const qrImgEl = document.getElementById('qrImage');
+      if (qrImgEl) {
+        qrImgEl.src = qrApiUrl;
+      }
     }
 
     function toggleSidebar() {
