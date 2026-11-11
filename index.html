@@ -77,7 +77,7 @@
       </div>
 
       <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-        <a href="https://apdo756290aa-svg.github.io/Egyptian-restaurant-/?v=1" target="_blank" class="bg-slate-800 hover:bg-slate-700 px-2.5 sm:px-3 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-300">
+        <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 px-2.5 sm:px-3 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-300">
           <i class="fa-solid fa-globe text-brand-500"></i>
           <span class="hidden xs:inline">عرض الزبون</span>
         </a>
@@ -180,7 +180,7 @@
       </div>
     </section>
 
-    <!-- 2. الطلبات (تعرض الأصناف بالتفصيل وبأمان ضد XSS) -->
+    <!-- 2. الطلبات -->
     <section id="tab-orders" class="admin-section hidden space-y-3 sm:space-y-4">
       <div class="flex justify-between items-center">
         <h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-receipt text-brand-500"></i> سجل الطلبات الواردة</h3>
@@ -222,7 +222,7 @@
       </div>
     </section>
 
-    <!-- 6. إعدادات المطعم العامة وأمان الحساب -->
+    <!-- 6. إعدادات المطعم -->
     <section id="tab-settings" class="admin-section hidden space-y-4">
       <h3 class="font-bold text-base text-white">إعدادات المطعم العامة والأمان</h3>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
@@ -254,7 +254,7 @@
     </section>
   </main>
 
-  <!-- Product Modal (Add/Edit) -->
+  <!-- Product Modal -->
   <div id="productModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-5 space-y-3 shadow-2xl">
       <h3 id="productModalTitle" class="font-bold text-base text-white">إضافة أو تعديل صنف</h3>
@@ -307,7 +307,6 @@
         const { data: { session } } = await supabaseClient.auth.getSession();
         if (session) {
           document.getElementById('adminLoginModal').classList.add('hidden');
-          // عرض إيميل الحساب المسجل حقيقياً بدلاً من النص الثابت
           document.getElementById('adminSessionStatus').innerText = session.user.email;
           await loadAllData();
         }
@@ -345,7 +344,7 @@
 
     function sanitizeHTML(str) {
       if (!str) return '';
-      return str.replace(/[&<>'"]/g, 
+      return String(str).replace(/[&<>'"]/g, 
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
       );
     }
@@ -459,7 +458,6 @@
       container.innerHTML = adminOrders.map(ord => {
         let itemsHTML = '';
         if (ord.items && Array.isArray(ord.items)) {
-          // تنقية كاملة لبيانات الأصناف والكميات والأسعار ضد ثغرات XSS
           itemsHTML = ord.items.map(i => `<div class="text-[11px] text-amber-300">• ${sanitizeHTML(i.name)} (x${sanitizeHTML(String(i.qty))}) = ${sanitizeHTML(String(i.price))}ج</div>`).join('');
         }
         return `
@@ -541,7 +539,6 @@
       }
     }
 
-    // عكس الترتيب: عمل الـ upsert أولاً، ولو نجح وحصل تغيير في الاسم امسح القديم بأمان
     async function executeUpsert(oldName, name, price, category, img) {
       const { error } = await supabaseClient.from('menu').upsert([{ name, price, category, img, available: true }], { onConflict: 'name' });
       if (error) {
